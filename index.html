@@ -53,7 +53,7 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .toggle.on{background:var(--violeta)}
 .toggle::after{content:'';position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .3s}
 .toggle.on::after{left:27px}
-.toggle-desc{font-size:.95rem;color:rgba(245,240,232,.55);margin-top:.25rem}
+.toggle-desc{font-size:.85rem;color:rgba(245,240,232,.55);margin-top:.25rem}
 .rondas-row{display:flex;align-items:center;gap:1rem;justify-content:center}
 .btn-circ{background:transparent;border:1px solid rgba(201,168,76,.4);color:var(--oro);width:38px;height:38px;border-radius:50%;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .rondas-n{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--oro-claro);width:60px;text-align:center}
@@ -63,7 +63,6 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .input-nombre{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.25);color:var(--blanco);padding:.65rem .9rem;font-family:'Cormorant Garamond',serif;font-size:1.05rem;border-radius:3px;width:100%;outline:none;transition:border-color .2s}
 .input-nombre:focus{border-color:var(--oro)}
 .input-nombre::placeholder{color:rgba(245,240,232,.25)}
-.equipo-label{font-size:.78rem;color:rgba(245,240,232,.4);white-space:nowrap}
 .game-header{display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px solid rgba(201,168,76,.18);margin-bottom:1.25rem}
 .ronda-info{text-align:center}
 .ronda-lbl{font-size:.78rem;letter-spacing:3px;color:var(--oro);text-transform:uppercase}
@@ -75,21 +74,13 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .pick-btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);color:rgba(245,240,232,.8);padding:.9rem .5rem;font-size:1.05rem;cursor:pointer;border-radius:4px;transition:all .2s;text-align:center;font-family:'Cormorant Garamond',serif;border-left-width:3px!important;border-left-style:solid!important}
 .pick-btn:hover{border-color:var(--oro);color:var(--oro-claro);background:rgba(201,168,76,.08)}
 .pick-btn.on{background:rgba(201,168,76,.15);border-color:var(--oro)!important;color:var(--oro-claro)}
-.pick-btn.violeta{border-left-color:var(--violeta)!important}
-.pick-btn.violeta.on{background:rgba(124,58,237,.15);border-color:var(--violeta-claro)!important;color:var(--violeta-claro)}
 .consigna-box{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.28);border-radius:6px;padding:1.5rem;margin-bottom:1.25rem}
-.consigna-oculta{min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:.5rem}
-.consigna-oculta span{font-size:.78rem;color:var(--oro);letter-spacing:2px}
 .consigna-txt{font-size:1.25rem;line-height:1.8;color:var(--blanco);font-style:italic;margin-top:.5rem}
 .jugadores-sel{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:.75rem}
 .sel-btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);color:rgba(245,240,232,.75);padding:.8rem .4rem;font-size:1rem;cursor:pointer;border-radius:4px;transition:all .2s;text-align:center;border-left-width:3px!important;border-left-style:solid!important}
 .sel-btn:hover:not(.es-rey){border-top-color:rgba(201,168,76,.5);border-right-color:rgba(201,168,76,.5);border-bottom-color:rgba(201,168,76,.5)}
 .sel-btn.on{background:rgba(201,168,76,.18);border-top-color:var(--oro)!important;border-right-color:var(--oro)!important;border-bottom-color:var(--oro)!important;color:var(--oro-claro)}
 .sel-btn.es-rey{background:rgba(201,168,76,.07);color:rgba(201,168,76,.5);cursor:default;font-size:.88rem}
-.todos-btn{width:100%;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.35);color:var(--violeta-claro);padding:.75rem;font-size:.95rem;cursor:pointer;margin-bottom:.75rem;letter-spacing:1px;transition:all .2s;border-radius:3px}
-.todos-btn:hover:not(:disabled){background:rgba(124,58,237,.2)}
-.todos-btn:disabled{opacity:.3;cursor:not-allowed}
-.cooldown-txt{font-size:.82rem;color:rgba(245,240,232,.4);text-align:center;margin-bottom:.5rem}
 .veredicto-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:.75rem}
 .v-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.75rem;text-align:center}
 .v-nombre{font-size:1rem;margin-bottom:.6rem;color:var(--blanco)}
@@ -103,8 +94,6 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .score-top{display:flex;justify-content:space-between;align-items:center}
 .score-equipo{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--oro-claro);display:flex;align-items:center;gap:.5rem}
 .score-pts{font-family:'Playfair Display',serif;font-size:2rem;color:var(--oro)}
-.score-jgs{display:flex;gap:1rem;margin-top:.4rem;flex-wrap:wrap}
-.score-jg{font-size:.9rem;color:rgba(245,240,232,.6)}
 .nivel-section{margin-bottom:1.5rem}
 .prenda-item{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:4px;padding:.7rem;margin-bottom:.4rem;display:flex;align-items:flex-start;gap:.5rem}
 .prenda-txt{font-size:1rem;line-height:1.6;flex:1;color:rgba(245,240,232,.88)}
@@ -129,6 +118,8 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .nav-bar-container{display:flex;gap:.4rem;justify-content:center;width:100%;max-width:520px;margin:0 auto}
 .nav-btn{background:transparent;border:1px solid rgba(201,168,76,.2);color:rgba(245,240,232,.5);padding:.55rem .6rem;font-size:.78rem;cursor:pointer;letter-spacing:1px;transition:all .2s;flex:1;max-width:110px;border-radius:3px}
 .nav-btn.on{background:rgba(201,168,76,.1);border-color:var(--oro);color:var(--oro-claro)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);zIndex:99999;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.modal-content{background:var(--negro);border:1px solid var(--oro);padding:1.5rem;max-width:450px;width:100%;border-radius:6px;max-height:80vh;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -214,9 +205,6 @@ function App(){
   const [numEq,setNumEq]=useState(4);
   const [rondas,setRondas]=useState(10);
   const [eqNombres,setEqNombres]=useState(['','','','','','']);
-  const [eqColores,setEqColores]=useState(['#c9a84c','#7c3aed','#16a34a','#0891b2']);
-  const [congelar,setCongelar]=useState(true);
-  const [cooldown,setCooldown]=useState(2);
   const [niveles,setNiveles]=useState({tibio:true,caliente:false,llamas:false});
   const [customPrendas,setCustomPrendas]=useState([]);
   const [newPrenda,setNewPrenda]=useState('');
@@ -241,14 +229,13 @@ function App(){
     
     let listEq=[];
     for(let i=0;i<numEq;i++){
-      listEq.push({id:i,nombre:eqNombres[i].trim()||`Equipo ${i+1}`,color:COLORES[i]||'#fff',puntos:0,integrantes:['','','']});
+      listEq.push({id:i,nombre:eqNombres[i].trim()||`Equipo ${i+1}`,color:COLORES[i]||'#fff',puntos:0});
     }
     setJuego({
       rondaActual:1,
       totalRondas:rondas,
       equipos:listEq,
       poolPrendas:pool,
-      historialPrendas:[],
       fase:'rey',
       rey:null,
       prendaActual:null,
@@ -277,7 +264,7 @@ function App(){
         </div>
       )}
       {tab==='setup'&&(
-        <div class="page animate-fadeIn">
+        <div class="page">
           <div class="header-page"><h2>Ajustes Realeza</h2></div>
           <div class="card">
             <span class="lbl">Cantidad de Equipos ({numEq})</span>
@@ -316,34 +303,13 @@ function App(){
               <button class={`btn-sm ${niveles.llamas?'on':''}`} onClick={()=>setNiveles({...niveles,llamas:!niveles.llamas})}>💥 Llamas</button>
             </div>
           </div>
-          <div class="card">
-            <span class="lbl">Reglas Avanzadas</span>
-            <div class="toggle-row" style={{marginBottom:'.8rem'}}>
-              <div>
-                <div style={{fontSize:'.95rem'}}>Ocultar la consigna al Rey</div>
-                <div class="toggle-desc">El Rey debe presionar la pantalla para poder leerla en secreto.</div>
-              </div>
-              <button class={`toggle ${congelar?'on':''}`} onClick={()=>setCongelar(!congelar)}></button>
-            </div>
-            <div class="toggle-row">
-              <div>
-                <div style={{fontSize:'.95rem'}}>Tiempo de Cooldown (S)</div>
-                <div class="toggle-desc">Segundos obligatorios antes de validar los veredictos de la ronda.</div>
-              </div>
-              <div style={{display:'flex',alignItems:'center',gap:'.5rem'}}>
-                <button class="btn-circ" style={{width:30,height:30,fontSize:'1rem'}} onClick={()=>setCooldown(Math.max(0,cooldown-1))}>-</button>
-                <span style={{fontFamily:'Playfair Display',serif,width:20,textAlign:'center'}}>{cooldown}</span>
-                <button class="btn-circ" style={{width:30,height:30,fontSize:'1rem'}} onClick={()=>setCooldown(Math.min(10,cooldown+1))}>+</button>
-              </div>
-            </div>
-          </div>
           <div style={{margin:'1.5rem 0 2rem'}}>
             <button class="btn-gold" style={{width:'100%'}} onClick={iniciarJuego}>EMPEZAR REINADO</button>
           </div>
         </div>
       )}
       {tab==='prendas'&&(
-        <div class="page animate-fadeIn">
+        <div class="page">
           <div class="header-page"><h2>Mazo de la Corona</h2><p class="nota">Modificá o añadí tus propias órdenes locales</p></div>
           <div class="card add-prenda">
             <span class="lbl">Crear Nueva Prenda</span>
@@ -369,7 +335,7 @@ function App(){
         </div>
       )}
       {tab==='scores'&&(
-        <div class="page animate-fadeIn">
+        <div class="page">
           <div class="header-page"><h2>Sala de Puntuación</h2></div>
           {juego?juego.equipos.map(e=>(
             <div key={e.id} class="score-card" style={{borderLeft:`4px solid ${e.color}`}}>
@@ -387,7 +353,7 @@ function App(){
         </div>
       )}
       {tab==='juego'&&juego&&(
-        <div class="page animate-fadeIn">
+        <div class="page">
           <div class="game-header">
             <button class="btn-outline" style={{padding:'.3rem .6rem',fontSize:'.7rem'}} onClick={()=>setModalReglas(true)}>REGLAS</button>
             <div class="ronda-info">
@@ -397,14 +363,14 @@ function App(){
             <div style={{fontSize:'.75rem',color:'var(--oro)',letterSpacing:'1px'}}>PRENDAS: {juego.poolPrendas.length}</div>
           </div>
           {juego.fase==='rey'&&(
-            <div class="fase animate-fadeIn">
+            <div class="fase">
               <div class="fase-icon">👑</div>
               <h3 class="fase-titulo">¿Qué equipo tomó la Corona de Rey?</h3>
               <div class="jugadores-pick">
                 {juego.equipos.map(e=>(
                   <button key={e.id} class="pick-btn" style={{borderLeftColor:e.color}} onClick={()=>{
                     let rIdx=Math.floor(Math.random()*juego.poolPrendas.length);
-                    let selectedPrenda=juego.poolPrendas[rIdx]||{id:'fallback',txt:'El Rey dicta una prenda libre a los equipos elegidos.',nivel:'tibio'};
+                    let selectedPrenda=juego.poolPrendas[rIdx]||{id:'fallback',txt:'El Rey dicta una prenda libre.',nivel:'tibio'};
                     setJuego({
                       ...juego,
                       rey:e.id,
@@ -419,14 +385,14 @@ function App(){
             </div>
           )}
           {juego.fase==='consigna'&&(
-            <div class="fase animate-fadeIn">
+            <div class="fase">
               <h3 class="fase-titulo" style={{fontSize:'1.1rem'}}>Rey Activo: <span style={{color:juego.equipos.find(e=>e.id===juego.rey)?.color}}>{juego.equipos.find(e=>e.id===juego.rey)?.nombre}</span></h3>
               <div class="consigna-box">
                 <span class={NB[juego.prendaActual.nivel]||'badge'}>{NL[juego.prendaActual.nivel]||'Prenda'}</span>
                 <p class="consigna-txt">"{juego.prendaActual.txt}"</p>
               </div>
               <div style={{textAlign:'left',marginBottom:'1rem'}}>
-                <span class="lbl">Seleccioná los Equipos obligados a cumplir:</span>
+                <span class="lbl">Equipos obligados a cumplir:</span>
               </div>
               <div class="jugadores-sel">
                 {juego.equipos.map(e=>{
@@ -451,7 +417,7 @@ function App(){
             </div>
           )}
           {juego.fase==='veredicto'&&(
-            <div class="fase animate-fadeIn">
+            <div class="fase">
               <h3 class="fase-titulo">Veredicto Real</h3>
               <div class="veredicto-grid">
                 {juego.seleccionados.map(id=>{
@@ -496,10 +462,10 @@ function App(){
             </div>
           )}
           {juego.fase==='ganador'&&(
-            <div class="winner animate-fadeIn">
+            <div class="winner">
               <div style={{fontSize:'4rem'}}>🏆</div>
               <h1>FIN DE LA PARTIDA</h1>
-              {(()=>{
+              {(()=> {
                 let maxPts=Math.max(...juego.equipos.map(e=>e.puntos));
                 let ganadores=juego.equipos.filter(e=>e.puntos===maxPts);
                 return(
@@ -530,26 +496,28 @@ function App(){
         </div>
       )}
       {modalReglas&&(
-        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.92)',zIndex:99999,display:'flex',alignItems:'center',justify..
-                  setModalReglas(false);
-                }} style={{width:'100%',marginTop:'1rem',background:'transparent',border:'1px solid rgba(201,168,76,.4)',color:'var(--oro)',padding:'.85rem',fontFamily:'Cinzel,serif',fontSize:'.85rem',cursor:'pointer',borderRadius:3,letterSpacing:'2px'}}>
-                  ← VOLVER AL JUEGO
-                </button>
-              </div>
-            </div>
-          )}
-          <div class="nav-bar">
-            <div class="nav-bar-container">
-              <button class={`nav-btn ${tab==='inicio'||tab==='setup'||tab==='juego'?'on':''}`} onClick={()=>setTab(juego?'juego':'inicio')}>🎴 JUEGO</button>
-              <button class={`nav-btn ${tab==='prendas'?'on':''}`} onClick={()=>setTab('prendas')}>📜 MAZO</button>
-              <button class={`nav-btn ${tab==='scores'?'on':''}`} onClick={()=>setTab('scores')}>📊 PUNTOS</button>
-            </div>
+        <div class="modal-overlay">
+          <div class="modal-content">
+            <h2 style={{fontFamily:'Playfair Display',color:'var(--oro-claro)',marginBottom:'1rem',textAlign:'center'}}>Reglas de la Corona</h2>
+            <p style={{fontSize:'.95rem',line-height:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>1. El equipo seleccionado como <strong>Rey</strong> toma el control de la ronda y lee la consigna en voz alta.</p>
+            <p style={{fontSize:'.95rem',line-height:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>2. El Rey decide cuáles de los demás equipos quedan obligados a realizar el reto.</p>
+            <p style={{fontSize:'.95rem',line-height:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>3. Una vez finalizada la prueba, se evalúa quién cumplió. Los que digan <strong>SÍ</strong> sumarán un punto en el marcador general.</p>
+            <button class="btn-outline" style={{width:'100%',marginTop:'1rem'}} onClick={()=>setModalReglas(false)}>ENTENDIDO</button>
           </div>
         </div>
-      );
-    }
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+      )}
+      <div class="nav-bar">
+        <div class="nav-bar-container">
+          <button class={`nav-btn ${tab==='inicio'||tab==='setup'||tab==='juego'?'on':''}`} onClick={()=>setTab(juego?'juego':'inicio')}>🎴 JUEGO</button>
+          <button class={`nav-btn ${tab==='prendas'?'on':''}`} onClick={()=>setTab('prendas')}>📜 MAZO</button>
+          <button class={`nav-btn ${tab==='scores'?'on':''}`} onClick={()=>setTab('scores')}>📊 PUNTOS</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
 </script>
 </body>
 </html>
