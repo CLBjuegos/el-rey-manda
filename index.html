@@ -3,260 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Rey Manda</title>
-    <!-- React y Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap');
-        .font-royal { font-family: 'Cinzel', serif; }
-        .font-sans { font-family: 'Poppins', sans-serif; }
+    <title>El Rey Manda ♛</title>
+    <!-- Tailwind CSS para diseño profesional -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        negro: '#0a0a0a',
+                        negrosuave: '#151515',
+                        dorado: '#ffd700',
+                        doradooscuro: '#ccac00',
+                        blanco: '#f5f5f5',
+                        rojoaviso: '#b80000',
+                    },
+                    fontFamily: {
+                        principal: ['Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .texto-sombra { text-shadow: 0 0 8px rgba(0,0,0,0.8); }
+            .desenfoque { backdrop-filter: blur(8px); }
+        }
     </style>
 </head>
-<body class="bg-stone-950 text-stone-100 font-sans min-h-screen flex flex-col">
+<body class="bg-negro text-blanco font-principal relative min-h-screen overflow-x-hidden">
 
-    <!-- Barra de Copyright -->
-    <div class="w-full bg-stone-900/90 border-b border-amber-500/20 py-2 px-4 text-center z-50">
-        <span class="font-royal text-xs text-amber-500 tracking-widest font-bold">© Carlos Lucas Bertarelli</span>
-        <span class="text-xs text-amber-500/50 mx-2">·</span>
-        <span class="text-xs text-stone-400 tracking-wider">Todos los derechos reservados · 2026 · Argentina</span>
+    <!-- Fondo unificado en un solo plano -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute inset-0 bg-black/70 z-10"></div>
+        <img src="fondo.jpg" alt="Fondo" class="w-full h-full object-cover opacity-25 blur-[10px]">
     </div>
 
-    <!-- Contenedor de la Aplicación -->
-    <div id="root" class="flex-1 flex flex-col justify-between pt-2 pb-24"></div>
+    <!-- SECCIÓN 1: LANDING PAGE -->
+    <div id="landing-section" class="relative z-10 max-w-[600px] mx-auto px-5 py-6 block">
+        <div class="bg-rojoaviso text-blanco text-center py-3 px-4 rounded-md font-bold mb-8 tracking-wide">
+            ⚠️ SOLO PARA MAYORES DE 18 AÑOS ⚠️
+        </div>
 
-    <script type="text/babel">
-        const { useState } = React;
+        <div class="text-center mb-10">
+            <div class="text-[3em] text-dorado mb-2 opacity-90">♛</div>
+            <h1 class="text-[2.3em] text-dorado font-bold mb-2 tracking-wide texto-sombra">EL REY MANDA</h1>
+            <h2 class="text-[1.3em] text-dorado font-normal opacity-90 texto-sombra">El juego que cambia tus noches ✨</h2>
+        </div>
 
-        const prendasPredefinidas = {
-            tibio: [
-                { id: 't1', texto: 'Los/las participantes seleccionados (máx. 8, en parejas según el Rey/Reyna) deberán mirarse durante 20 segundos, hacerse caras y gestos sensuales y sexuales sin reírse. Sonreír es válido. Si alguno/a se ríe, termina su turno, no suma puntos y pasa a la siguiente pareja.' },
-                { id: 't2', texto: 'Los/las participantes elegidos deberán masajear suavemente y con caricias los hombros, espalda y cintura del número elegido por el Rey/Reyna.' },
-                { id: 't3', texto: 'Los/las participantes seleccionados deberán desfilar lenta y sensualanmente como en una pasarela, ida y vuelta, delante del Rey/Reyna. (Si ponen música va a resultar más divertido.) Todos suman punto.' },
-                { id: 't4', texto: 'Los participantes elegidos deberán adivinar el color de la ropa interior del Rey/Reyna, quien deberá mostrarla al finalizar la prenda para confirmar. Quien adivine suma punto extra. Todos suman 1 punto.' },
-                { id: 't5', texto: 'Los números elegidos deberán hacer un mini striptease mirando al Rey/Reyna. Tienen 1 minuto. (Si puede escucharse música acorde desde algún dispositivo, será aún más divertida.)' },
-                { id: 't6', texto: 'Los números elegidos deberán quitarse una prenda de vestir (la que quieran) y permanecer sin ella hasta el final de todas las rondas. No se cuentan accesorios. Cada vez que esta consigna se repita, deberá quitarse una prenda distinta.' },
-                { id: 't7', texto: 'Mínimo 4 participantes. Los números elegidos deberán hacer "el gusanito" en el piso alrededor del Rey/Reyna, gateando en ronda y bien pegaditos unos con otros, completando 3 vueltas completas.' },
-                { id: 't8', texto: 'Mínimo 4 participantes. Se vendan los ojos al primer elegido/a y se lo sienta en una silla. Los demás se colocan de a uno frente a él/ella sin hablar ni tocar nada. El/la vendado/a deberá tocar las colas (nalgas) de cada uno con sus manos e intentar descubrir quién es quién. Cada acierto suma un punto extra solo al/la participante de ojos vendados.' },
-                { id: 't9', texto: 'Los participantes elegidos deberán acercarse al Rey/Reyna y darle un beso "piquito" en la boca. Su Majestad puede elegir otro participante de los elegidos si no desea que lo/la besen a él/ella.' },
-                { id: 't10', texto: 'Mínimo 4 participantes. 1 minuto cada uno/a. Escena imaginaria en ascensor cerrado: 1 es el/la jefe/a, los otros 3 son empleados/as. De a uno/a a la vez, los empleados/as deben conquistar y convencer a su jefe/a de otorgarles un aumento de sueldo de la forma más sensual posible. Todo recurso es válido pero sin tocarse. Todos suman 1 punto.' },
-                { id: 't11', texto: 'Mínimo 2, maximum 6 participantes (en parejas). 1 minuto cada uno/a. Escena imaginaria: pareja en la cama. Cada uno/a deberá explicar a su pareja circunstancial improvisando por qué esa noche no logró excitarse, incluyendo obligatoriamente una de las siguientes palabras: Termo, Empanada, Maní, Cacerola. Cada uno elige su palabra y no se pueden repetir. Suman 1 punto cada uno.' },
-                { id: 't12', texto: '1 minuto cada uno/a. Los números participantes deberán vender un consolador o vibrador al Rey/Reyna para su uso o de su pareja. Pueden ayudarse con el elemento real de haberlo, o con cualquier elemento fálico similar disponible. Deben incluir al menos 1 vez en su relato alguna de estas frases: "como una flor" o "la segunda ya va más fácil". Todos suman 1 punto.' },
-                { id: 't13', texto: 'Los números elegidos deberán bailar "Pa Alante Pa Atrás" de Jean Carlos siguiendo la coreografía que anuncie la canción, bien juntitos en fila intercalando posiciones hombre/mujer/hombre durante todo el tema. Suman 1 punto cada uno si completan la consigna.' },
-                { id: 't14', texto: 'Los elegidos/as deberán darse un beso de lengua de 20 segundos en grupos de 3, intercalando sexos. La persona que no quiera realizar la consigna pierde el turno; cumplirán entre los/las dos que acepten el reto. Suma 1 punto cada uno/a que cumpla.' },
-                { id: 't15', texto: 'Todos los números deberán estar contra la pared, de espaldas, con las manos apoyadas en la pared (postura de operativo policial). El Rey/Reyna o el reemplazo que Su Majestad elija entre los números deberá hacer un "cacheo" a todos y uno por uno.' },
-                { id: 't16', texto: 'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.' }
-            ],
-            caliente: [
-                { id: 'c1', texto: 'Tiempo 2 minutos. Los números que el Rey/Reyna elija deberán quitar 2 prendas de vestir en total a otra persona designada por el Rey/Reyna (quien debe quedarse parado/a sin moverse), utilizando solamente una mano cada uno/a y la boca.' },
-                { id: 'c2', texto: 'Los/las participantes elegidos/as deberán hacer un baile tipo striptease dedicado al Rey/Reyna hasta quedar en ropa interior. Se pueden ayudar unos con otros/as. Suman puntos individuales si completan estrictamente la consigna. (Será más divertida si la musicalizan con algún dispositivo.)' },
-                { id: 'c3', texto: 'Los números elegidos/as deberán demostrar su destreza en seducción intentando convencer al Rey/Reyna sutilmente para tener sexo. No podrán hablar, solamente gesticular, tocarse, mostrarse y mover sus manos para tal fin. Tienen 2 minutos cada uno/a.' },
-                { id: 'c4', texto: 'Tiempo 30 segundos. Los designados/as deberán emular una relación sexual hasta llegar al clímax, con sus gemidos, ruidos y gestos correspondientes, ante todos los/las presentes. Suman 1 punto cada uno/a.' },
-                { id: 'c5', texto: 'Mínimo 4 participantes. Se forman parejas. Cada pareja tiene 10 segundos para darse el beso más fogoso posible. Los observadores puntúan del 1 al 10. Todos suman 1 punto.' },
-                { id: 'c6', texto: 'El Rey/Reyna elige a 2 personas. Deberán bailar pegados/as con una hoja de papel entre sus cuerpos sin que caiga al piso, al ritmo de música brasileña movida o reggaeton. 1 minuto. Si la hoja cae, pierden el punto. Si la mantienen, ambos suman.' },
-                { id: 'c7', texto: 'El Rey/Reyna decide los números de los/las plebeyos/as que se quitarán una prenda de vestir. No válido pañuelo ni accesorios. Las prendas son acumulativas y no se vuelven a colocar hasta finalizar el juego.' },
-                { id: 'c11', texto: 'Los participantes elegidos deberán mostrarle la cola al Rey/Reyna en ropa interior. Quienes tengan colaless o se la metan para lograrlo, suman punto. Quienes no lo hagan, no suman.' },
-                { id: 'c12', texto: 'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían un pene, durante 15 segundos. Pueden utilizar dos dedos propios o ajenos, o una banana o cualquier elemento similar.' },
-                { id: 'c13', texto: 'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían una vagina, durante 15 segundos. Pueden utilizar sus manos o ajenas, o una galletita, o cualquier elemento similar.' },
-                { id: 'c14', texto: 'Los participantes deberán bailar El Meneaito en ropa interior frente al Rey/Reyna.' },
-                { id: 'c15', texto: 'Los elegidos/as deberán hacer un "desfile de modas" con la ropa que les quedó puesta hasta ese momento del juego. El Rey/Reyna es el/la jurado/a. De a uno/a, cada participante debe mostrarse y realizar una acción distinta y original a libre elección: sacarse otra prenda, darle un beso a alguien, hacer un baile, una pose, mostrar una parte de su cuerpo, etc. No se puede repetir la misma acción. Todos suman 1 punto.' },
-                { id: 'c16', texto: 'Los participantes elegidos deberán formar "la ronda de los elefantes": cada uno coloca su mano entre las piernas simulando la trompa, agarrando la cola (nalgas) de la persona que tiene adelante. La ronda no tiene principio ni fin. Deberán girar 3 vueltas completas sin desconectarse. Si alguna "trompa" se suelta, pierden todos los puntos y vuelven a empezar. Todos suman punto si completan. Los observadores pueden poner música o aplaudir para ambientar.' },
-                { id: 'c17', texto: '1 minuto cada uno/a. Los números elegidos deberán realizar un "baile del caño sensual" frente al Rey/Reyna, simulando ser un/a pooldancer. Deben ayudarse con un palo de escoba, secador o similar para emular la escenografía. Se puede musicalizar con música estilo striptease o rock pesado de los 80/90.' },
-                { id: 'c18', texto: 'La lámpara de Aladino. Duración 2 minutos. Los números elegidos forman una ronda. Cada uno/a con su mano derecha "frota la lámpara" de la persona que tiene a su derecha durante 1 minuto. Luego cambian: mano izquierda al compañero/a de la izquierda durante 1 minuto. Todos suman punto.' },
-                { id: 'c19', texto: 'El Rey/Reyna anota un número de una cifra en un papel y lo guarda sin que nadie lo vea. Luego elige los números participantes. Éstos arriesgan intentando adivinar de a uno/a por turno qué número escribió Su Majestad. Quien lo adivine tendrá el honor de ser masajeado/a por el Rey/Reyna en todo su cuerpo durante 2 minutos. Todos suman punto por participar. De no adivinarse el número, nadie suma puntos.' },
-                { id: 'c20', texto: 'El Rey/Reyna elige 4 participantes. Tiempo 5 minutos. Acting tipo sketch: una pareja está en la cama entre besos y caricias. De repente llega el marido/la mujer de uno/a de ellos/as, se sorprende y enojado/a dice: "¡Así te quería agarrar!" A partir de ahí deben improvisar una escena de humor y erotismo donde finalmente terminan los 3 en la cama y de manera coherente suman a un/una cuarta participante. La escena debe cerrar obligatoriamente con: "¡Al final... felices los 4!" Todos suman punto.' },
-                { id: 'c21', texto: 'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.' }
-            ],
-            llamas: [
-                { id: 'l1', texto: 'El Rey/Reyna elige participantes, mínimo 3, máximo 6. No importa el sexo. Deberán recrear una escena de película para adultos con diferentes roles asignados por Su Majestad: el cadete delivery, la dueña de casa que recibe la compra, el marido que mira escondido, el plomero que estaba trabajando en la casa, la mucama, la niñera. Cada uno tiene un rol y debe entrar en escena. Tienen 5 minutos. La escena debe terminar en una orgía entre todos los números participantes. Todos suman punto.' },
-                { id: 'l2', texto: 'El Rey/Reyna eligirá y definirá las parejas de números que deberán besarse y tocarse mutuamente de forma sensual y apasionada durante 20 segundos. Todos suman punto.' },
-                { id: 'l3', texto: 'Los números elegidos deberán ponerse frente al Rey/Reyna y quitarle al compañero/a de su derecha 1 prenda de vestir de manera lenta y sensual, sin que el/la desvestido/a se mueva o lo ayude. No válido: accesorios, pañuelos, medias. Las prendas no se vuelven a colocar hasta finalizar el juego.' },
-                { id: 'l8', texto: 'La carrera de caballos. Tiempo 30 segundos. Los elegidos/as forman parejas sin importar el sexo. Uno/a (el caballo) se sienta en una silla o sillón y recibe a su pareja (el/la jockey), quien se sienta sobre él/ella dándole la espalda. Una vez ubicadas las parejas una al lado de la otra, el Rey/Reyna da la orden de largada y comienzan a cabalgar suavemente durante 30 segundos. Su Majestad controla el tiempo y da por terminada la prenda. Todos suman punto.' },
-                { id: 'l9', texto: 'Los elegidos/as deberán demostrar en pareja cómo succionarían un pene y una vagina de forma explícita, durante 20 segundos cada uno/a, primero uno y luego el otro, frente al Rey/Reyna. Pueden utilizar dedos, manos, banana, galletita o elementos similares.' },
-                { id: 'l10', texto: 'La lámpara de Aladino versión hot. Los elegidos/as forman una ronda. Cada uno/a frota con su mano por dentro de la ropa interior del/la compañero/a de su derecha durante 1 minuto. Luego cambian de lado. Todos suman punto.' },
-                { id: 'l11', texto: 'La ronda de los elefantes versión hot. Los participantes elegidos/as forman una ronda en ropa interior: cada uno coloca su mano entre las piernas agarrando la cola (nalgas) de la persona que tiene adelante. Deberán girar 3 vueltas completas sin soltarse. Si alguno se suelta, pierden todos y vuelven a empezar. Todos suman punto si completan.' },
-                { id: 'l12', texto: 'Los números elegidos deberán realizar un 69 frente al Rey/Reyna. En caso de no querer hacer sexo oral, vale también la masturbación mutua con la mano.' },
-                { id: 'l13', texto: 'Los números elegidos se dividen en grupos por sexo. Si manda el Rey: las mujeres hacen topless y de a uno ponen la cabeza del Rey entre sus pechos dejando que Su Majestad juegue durante 10 segundos. Los hombres elegidos solo miran. Si manda la Reyna: los hombres se arrodillan ante ella y le hacen sexo oral uno a uno durante 10 segundos cada uno. Las mujeres elegidas miran el disfrute de la Reyna. Todos suman punto.' },
-                { id: 'l14', texto: 'Los elegidos/as deberán buscar a su pareja de equipo real, sentarla en una silla y realizarle sexo oral durante 10 segundos. En caso de que el Rey/Reyna o el Comodín participen y también deban ser complacidos/as, quien lo haga suma 1 punto extra. De no hacerlo suma solo 1 punto.' },
-                { id: 'l15', texto: 'Las personas elegidas deberán pasar una por una y darle un beso seco al Rey/Reyna en su sexo. No importa el sexo de los participantes, todos cumplen la misma regla...' }
-            ]
+        <div class="space-y-6 mb-10">
+            <div class="bg-negrosuave/90 p-5 rounded-lg border-l-[3px] border-dorado shadow-lg">
+                <h3 class="text-dorado font-bold text-[1.2em] mb-3">✅ ¿Cómo funciona?</h3>
+                <p class="leading-relaxed">
+                    1. Iniciá la aplicación desde la web.<br>
+                    2. Introducí tu CLAVE ÚNICA de activación.<br>
+                    3. ¡Jugás con tus amigos en la misma pantalla!
+                </p>
+            </div>
+
+            <div class="bg-negrosuave/90 p-5 rounded-lg border-l-[3px] border-dorado shadow-lg">
+                <h3 class="text-dorado font-bold text-[1.2em] mb-3">💳 Adquirir Clave</h3>
+                <p>🇦🇷 Argentina: Mercado Pago<br>🌍 Exterior: Consultar por WhatsApp</p>
+            </div>
+
+            <div class="bg-negrosuave/90 p-5 rounded-lg border-l-[3px] border-dorado shadow-lg">
+                <h3 class="text-dorado font-bold text-[1.2em] mb-3">📲 Acceso al Juego</h3>
+                <button onclick="iniciarAppJuego()" class="w-full block bg-gradient-to-br from-dorado to-doradooscuro text-negro text-center py-4 px-5 rounded-lg font-bold text-[1.15em] transition-all duration-300 hover:-translate-y-[2px] hover:shadow-[0_0_15px_rgba(255,215,0,0.4)] shadow-[0_0_10px_rgba(255,215,0,0.3)] tracking-wide uppercase">
+                    ▶️ INICIAR APLICACIÓN OFICIAL
+                </button>
+                <div class="text-[1.35em] font-bold text-dorado text-center my-4 tracking-[1px] texto-sombra">📞 +54 9 3547 32-7056</div>
+                <p class="text-sm opacity-95 text-center">Escribinos para obtener soporte o activar tu clave al instante</p>
+            </div>
+        </div>
+
+        <footer class="text-center text-[0.85em] text-gray-400 border-t border-gray-800 pt-5 texto-sombra">
+            © 2026 El Rey Manda · Todos los derechos reservados
+        </footer>
+    </div>
+
+    <!-- SECCIÓN 2: APLICACIÓN DE JUEGO (Oculta al principio) -->
+    <div id="juego-section" class="relative z-20 max-w-[500px] mx-auto px-4 py-6 hidden">
+        <div id="pantalla-activacion" class="hidden space-y-4">
+            <h2 class="text-2xl font-bold text-dorado text-center uppercase tracking-wide">ACTIVACIÓN REQUERIDA</h2>
+            <div class="bg-neutral-900 border border-dorado/20 rounded-lg p-5 space-y-4">
+                <div>
+                    <label class="block text-xs text-dorado mb-1 uppercase">Tu Nombre</label>
+                    <input type="text" id="act-user" class="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white outline-none focus:border-dorado">
+                </div>
+                <div>
+                    <label class="block text-xs text-dorado mb-1 uppercase">Código de Activación</label>
+                    <input type="text" id="act-codigo" class="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white font-mono uppercase text-center tracking-widest focus:border-dorado" placeholder="REY-XXXX">
+                </div>
+                <p id="act-error" class="text-sm text-red-400 hidden"></p>
+                <button onclick="verificarLicencia()" id="btn-activar" class="w-full bg-dorado text-negro font-bold py-2.5 rounded transition-opacity hover:opacity-90 uppercase">
+                    ACTIVAR LICENCIA
+                </button>
+            </div>
+        </div>
+
+        <div id="pantalla-menu" class="hidden text-center py-10 space-y-6">
+            <span class="text-5xl block animate-bounce">♛</span>
+            <h1 class="text-4xl font-extrabold tracking-wider text-dorado">EL REY MANDA</h1>
+            <p class="text-sm text-gray-400">Consolas locales activas</p>
+            <button onclick="irAConfiguracion()" class="bg-dorado text-negro font-bold py-3 px-8 rounded-md tracking-wider uppercase transform hover:scale-105 transition-transform">
+                Jugar Rondas
+              </button>
+        </div>
+
+        <div id="pantalla-config" class="hidden space-y-4">
+            <h2 class="text-xl text-dorado font-bold text-center">Configurar Jugadores</h2>
+            <div class="bg-neutral-900 border border-neutral-800 rounded-lg p-4 space-y-4">
+                <div>
+                    <label class="block text-sm text-neutral-400 mb-2">Cantidad: <span id="val-cantidad" class="text-dorado font-bold">4</span></label>
+                    <input type="range" id="cant-jugadores" min="4" max="12" value="4" oninput="actualizarInputsJugadores()" class="w-full accent-dorado">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs text-neutral-400">Nombres de los Plebeyos</label>
+                    <div id="contenedor-nombres" class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+            <button onclick="empezarPartida()" class="w-full bg-dorado text-negro font-bold py-3 rounded-lg uppercase">
+                Iniciar Partida →
+            </button>
+        </div>
+
+        <div id="pantalla-ronda" class="hidden space-y-6">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
+                <span id="info-ronda" class="text-xs text-dorado font-bold">RONDA 1 / 20</span>
+                <span class="text-sm">👑 Modo Activo</span>
+            </div>
+
+            <!-- Subfase 1: Elegir Rey -->
+            <div id="subfase-elegir-rey" class="space-y-4 text-center">
+                <h3 class="text-lg text-dorado">¿Quién sacó la corona del Rey?</h3>
+                <div id="lista-reyes" class="grid grid-cols-2 gap-2"></div>
+            </div>
+
+            <!-- Subfase 2: Mostrar Consigna -->
+            <div id="subfase-consigna" class="hidden space-y-4 text-center">
+                <div class="bg-dorado/10 border border-dorado/20 rounded-xl p-5">
+                    <h4 id="titulo-consigna" class="text-xs text-dorado tracking-widest uppercase mb-1">Orden del Rey</h4>
+                    <p id="texto-consigna" class="text-lg italic font-serif leading-relaxed px-2"></p>
+                </div>
+                <div class="text-left space-y-2">
+                    <label class="text-xs text-neutral-400">Seleccioná los plebeyos obligados a cumplir:</label>
+                    <div id="lista-afectados" class="grid grid-cols-2 gap-2"></div>
+                </div>
+                <button onclick="irAVeredicto()" id="btn-ir-veredicto" class="w-full bg-dorado text-negro font-bold py-2.5 rounded-lg text-sm uppercase opacity-50" disabled>
+                    Evaluar cumplimiento
+                </button>
+            </div>
+
+            <!-- Subfase 3: Veredicto -->
+            <div id="subfase-veredicto" class="hidden space-y-4">
+                <h3 class="text-md text-center text-dorado">¿Cumplieron la orden de Su Majestad?</h3>
+                <div id="lista-veredictos" class="space-y-2"></div>
+                <button onclick="guardarRonda()" class="w-full bg-dorado text-negro font-bold py-2.5 rounded-lg text-sm uppercase mt-4">
+                    Siguiente Ronda →
+                </button>
+            </div>
+        </div>
+
+        <div id="pantalla-final" class="hidden flex flex-col justify-center items-center p-6 text-center space-y-4">
+            <h1 class="text-2xl font-black text-dorado">FIN DE LAS PRENDAS</h1>
+            <p class="text-sm text-neutral-400">Mazo completado con éxito.</p>
+            <button onclick="window.location.reload()" class="bg-neutral-900 border border-dorado text-dorado py-2 px-4 rounded text-sm">
+                REINICIAR COMPLETAMENTE
+            </button>
+        </div>
+    </div>
+
+    <!-- Pop-up inicial comercial -->
+    <div id="popup1" class="fixed top-1/3 left-1/2 -translate-x-1/2 z-50 bg-negro/95 border border-dorado/30 rounded-lg p-6 shadow-[0_0_25px_rgba(255,215,0,0.2)] desenfoque transition-all duration-500 opacity-0 translate-y-10 pointer-events-none max-w-[90%] w-[450px]">
+        <div class="text-center">
+            <div class="text-[2.5em] text-dorado mb-3">♛</div>
+            <p class="text-[1.5em] text-dorado font-bold leading-tight">
+                La diversión comienza<br>
+                cuando vos das la orden
+            </p>
+        </div>
+    </div>
+
+    <!-- LÓGICA DE JUEGO PURA EN JAVASCRIPT NATIVO -->
+    <script>
+        const PRENDAS = [
+            "Los/las participantes seleccionados deberán mirarse durante 20 segundos, hacerse caras y gestos sensuales sin reírse. Si alguno/a se ríe, pasa el turno.",
+            "Los/las participantes elegidos deberán masajear suavemente los hombros o espalda del número elegido por el Rey/Reyna.",
+            "Los/las participantes seleccionados deberán desfilar lenta y sensualmente como en una pasarela delante del Rey/Reyna.",
+            "Los participantes elegidos deberán adivinar el color de la ropa interior del Rey/Reyna. Quien adivine suma punto extra.",
+            "Los números elegidos deberán hacer un mini baile mirando al Rey/Reyna durante 1 minuto.",
+            "Los números que el Rey/Reyna elija deberán quitar 2 prendas de vestir en total a otra persona designada por el Rey/Reyna utilizando solamente una mano.",
+            "Los/las participantes elegidos/as deberán hacer un baile tipo striptease dedicado al Rey/Reyna hasta quedar en ropa interior.",
+            "El Rey/Reyna elegirá y definirá las parejas de números que deberán besarse y tocarse de forma apasionada durante 20 segundos.",
+            "Las personas elegidas deberán pasar una por una y darle un beso seco al Rey/Reyna en la zona que Su Majestad ordene."
+        ];
+
+        const SB_URL = 'https://nepnpommpvpzeqtsxfru.supabase.co';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lcG5wb21tcHZwemVxdHN4ZnJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MzY5MTUsImV4cCI6MjA5NDUxMjkxNX0.ngZjx0kvnp-7tBA0kFu6_CoYbIjWpGviINWD8fCDVNQ';
+
+        let estado = {
+            activado: !!localStorage.getItem('rm_activacion'),
+            rondaActual: 1,
+            totalRondas: 20,
+            jugadores: [],
+            reyId: null,
+            prendaActual: "",
+            elegidos: [],
+            veredictos: {}
         };
 
-        function App() {
-            const [vista, setVista] = useState('configuracion'); // configuracion, juego
-            const [equipos, setEquipos] = useState([
-                { id: 1, nombre: '', integrantes: '', puntos: 0 },
-                { id: 2, nombre: '', integrantes: '', puntos: 0 }
-            ]);
-            const [intensidad, setIntensidad] = useState('tibio');
-            const [prendaActual, setPrendaActual] = useState(null);
-
-            const agregarEquipo = () => {
-                if (equipos.length < 6) {
-                    setEquipos([...equipos, { id: Date.now(), nombre: '', integrantes: '', puntos: 0 }]);
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const popup = document.getElementById('popup1');
+                if(popup) {
+                    popup.classList.remove('opacity-0', 'translate-y-10');
+                    popup.classList.add('opacity-100', 'translate-y-0');
+                    setTimeout(() => {
+                        popup.classList.remove('opacity-100', 'translate-y-0');
+                        popup.classList.add('opacity-0', 'translate-y-10');
+                    }, 3500);
                 }
-            };
+            }, 500);
+        });
 
-            const removerEquipo = (id) => {
-                if (equipos.length > 2) {
-                    setEquipos(equipos.filter(e => e.id !== id));
-                }
-            };
-
-            const manejarCambioEquipo = (id, campo, valor) => {
-                setEquipos(equipos.map(e => e.id === id ? { ...e, [campo]: valor } : e));
-            };
-
-            const obtenerPrendaAleatoria = () => {
-                const lista = prendasPredefinidas[intensidad];
-                const random = Math.floor(Math.random() * lista.length);
-                setPrendaActual(lista[random]);
-            };
-
-            const modificarPuntos = (id, cantidad) => {
-                setEquipos(equipos.map(e => e.id === id ? { ...e, puntos: Math.max(0, e.puntos + cantidad) } : e));
-            };
-
-            return (
-                <div class="w-full max-w-md mx-auto px-4 py-6 flex-1 flex flex-col justify-between">
-                    
-                    {/* INTERFAZ DE CONFIGURACIÓN ORIGINAL */}
-                    {vista === 'configuracion' && (
-                        <div class="space-y-6">
-                            <div class="text-center">
-                                <h1 class="font-royal text-3xl font-black tracking-widest text-amber-500 uppercase">El Rey Manda</h1>
-                                <p class="text-xs font-royal tracking-widest text-stone-400 mt-1">Gestión Local de Tablero</p>
-                            </div>
-
-                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <label class="text-xs font-royal tracking-widest text-amber-500 uppercase font-bold">Registro de Parejas / Equipos</label>
-                                    {equipos.length < 6 && (
-                                        <button onClick={agregarEquipo} class="text-xs bg-amber-500 text-stone-950 font-bold px-2 py-1 rounded">
-                                            + Añadir
-                                        </button>
-                                    )}
-                                </div>
-                                
-                                <div class="space-y-3 max-h-64 overflow-y-auto pr-1">
-                                    {equipos.map((eq, index) => (
-                                        <div key={eq.id} class="bg-stone-950 p-3 rounded border border-stone-800 relative space-y-2">
-                                            <div class="flex justify-between items-center">
-                                                <span class="text-xs font-mono text-stone-500 font-bold">Equipo #{index + 1}</span>
-                                                {equipos.length > 2 && (
-                                                    <button onClick={() => removerEquipo(eq.id)} class="text-red-500 text-xs font-bold px-1">✕</button>
-                                                )}
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                placeholder="Nombre del Equipo o Pareja"
-                                                value={eq.nombre}
-                                                onChange={(e) => manejarCambioEquipo(eq.id, 'nombre', e.target.value)}
-                                                class="w-full bg-stone-900 border border-stone-800 px-2 py-1 text-xs text-stone-100 rounded focus:outline-none focus:border-amber-500"
-                                            />
-                                            <input 
-                                                type="text" 
-                                                placeholder="Nombres de los integrantes (ej: Juan y Ana)"
-                                                value={eq.integrantes}
-                                                onChange={(e) => manejarCambioEquipo(eq.id, 'integrantes', e.target.value)}
-                                                class="w-full bg-stone-900 border border-stone-800 px-2 py-1 text-xs text-stone-400 rounded focus:outline-none focus:border-amber-500"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded">
-                                <label class="text-xs font-royal tracking-widest text-amber-500 uppercase block mb-3 font-bold">Filtro de Intensidad Real</label>
-                                <div class="grid grid-cols-3 gap-2">
-                                    {['tibio', 'caliente', 'llamas'].map(lvl => (
-                                        <button 
-                                            key={lvl}
-                                            onClick={() => setIntensidad(lvl)}
-                                            class={`py-2 text-xs font-bold border rounded uppercase transition ${intensidad === lvl ? 'border-amber-500 bg-amber-500/10 text-amber-400' : 'border-stone-800 text-stone-500'}`}
-                                        >
-                                            {lvl === 'tibio' && '🌡️ Tibio'}
-                                            {lvl === 'caliente' && '🔥 Hot'}
-                                            {lvl === 'llamas' && '💥 Llamas'}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <button 
-                                onClick={() => { setVista('juego'); obtenerPrendaAleatoria(); }}
-                                class="w-full bg-gradient-to-b from-amber-400 to-amber-600 text-stone-950 font-royal font-bold text-sm tracking-widest py-3 uppercase shadow"
-                            >
-                                Iniciar Servidor de Juego
-                            </button>
-                        </div>
-                    )}
-
-                    {/* INTERFAZ DE GESTIÓN DE PRENDAS Y PUNTAJES ORIGINAL */}
-                    {vista === 'juego' && (
-                        <div class="space-y-6 flex-1 flex flex-col justify-between">
-                            
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center border-b border-stone-800 pb-2">
-                                    <span class="text-xs font-royal tracking-widest text-amber-500 font-bold uppercase">Prenda del Rey Vigente</span>
-                                    <span class="text-[10px] bg-stone-900 px-2 py-0.5 rounded border border-stone-800 font-mono uppercase text-stone-400">
-                                        Intensidad: {intensidad}
-                                    </span>
-                                </div>
-
-                                <div class="bg-stone-900 border border-amber-500/30 p-5 rounded shadow-inner text-center min-h-[100px] flex items-center justify-center">
-                                    <p class="text-stone-200 text-sm font-serif italic leading-relaxed">
-                                        "{prendaActual?.texto}"
-                                    </p>
-                                </div>
-
-                                <button 
-                                    onClick={obtenerPrendaAleatoria}
-                                    class="w-full bg-stone-900 border border-stone-700 text-amber-400 font-royal text-xs tracking-widest py-2.5 uppercase hover:border-stone-500"
-                                >
-                                    Siguiente Prenda Aleatoria 🎲
-                                </button>
-                            </div>
-
-                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded space-y-3">
-                                <label class="text-xs font-royal tracking-widest text-stone-400 uppercase block border-b border-stone-800 pb-1 font-bold text-center">
-                                    Control General de Puntos
-                                </label>
-                                <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
-                                    {equipos.map(eq => (
-                                        <div key={eq.id} class="flex items-center justify-between p-2.5 bg-stone-950 border border-stone-800 rounded">
-                                            <div class="truncate pr-2">
-                                                <div class="text-xs font-bold text-stone-100 truncate">{eq.nombre || 'Sin nombre'}</div>
-                                                <div class="text-[10px] text-stone-500 truncate">{eq.integrantes || 'Sin integrantes'}</div>
-                                            </div>
-                                            <div class="flex items-center space-x-3 flex-shrink-0">
-                                                <button onClick={() => modificarPuntos(eq.id, -1)} class="w-6 h-6 border border-stone-800 text-stone-400 flex items-center justify-center text-xs font-bold bg-stone-900 rounded">-</button>
-                                                <span class="font-mono text-sm font-bold text-amber-400 w-6 text-center">{eq.puntos}</span>
-                                                <button onClick={() => modificarPuntos(eq.id, 1)} class="w-6 h-6 border border-stone-800 text-stone-400 flex items-center justify-center text-xs font-bold bg-stone-900 rounded">+</button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <button 
-                                onClick={() => setVista('configuracion')}
-                                class="w-full bg-stone-950 border border-stone-800 text-stone-500 font-royal text-xs tracking-widest py-2 uppercase hover:text-stone-400"
-                            >
-                                Volver a Configuración / Reset
-                            </button>
-                        </div>
-                    )}
-
-                </div>
-            );
+        function iniciarAppJuego() {
+            document.getElementById('landing-section').classList.add('hidden');
+            document.getElementById('juego-section').classList.remove('hidden');
+            ocultarPantallas();
+            
+            if (estado.activado) {
+                document.getElementById('pantalla-menu').classList.remove('hidden');
+            } else {
+                document.getElementById('pantalla-activacion').classList.remove('hidden');
+            }
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function ocultarPantallas() {
+            ['pantalla-activacion', 'pantalla-menu', 'pantalla-config', 'pantalla-ronda', 'pantalla-final'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+        }
+
+        async function verificarLicencia() {
+            const user = document.getElementById('act-user').value.trim();
+            const codigo = document.getElementById('act-codigo').value.trim().toUpperCase();
+            const errorTxt = document.getElementById('act-error');
+            const btn = document.getElementById('btn-activar');
+
+            if (!user || !codigo) {
+                errorTxt.innerText = "Completá ambos campos.";
+                errorTxt.classList.remove('hidden');
+                return;
+            }
+
+            btn.innerText = "VERIFICANDO...";
+            btn.disabled = true;
+
+            try {
+                const r = await fetch(`${SB_URL}/rest/v1/licencias?codigo=eq.${codigo}&select=*`, {
+                    headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+                });
+                const data = await r.json();
+                if (data && data.length > 0 && data[0].activo) {
+                    localStorage.setItem('rm_activacion', JSON.stringify({ nombre: user, codigo: codigo }));
+                    estado.activado = true;
+                    ocultarPantallas();
+                    document.getElementById('pantalla-menu').classList.remove('hidden');
+                } else {
+                    errorTxt.innerText = "Código inválido o dado de baja.";
+                    errorTxt.classList.remove('hidden');
+                }
+            } catch (e) {
+                errorTxt.innerText = "Error de conexión con la base de datos.";
+                errorTxt.classList.remove('hidden');
+            }
+            btn.innerText = "ACTIVAR LICENCIA";
+            btn.disabled = false;
+        }
+
+        function irAConfiguracion() {
+            ocultarPantallas();
+            document.getElementById('pantalla-config').classList.remove('hidden');
+            actualizarInputsJugadores();
+        }
+
+        function actualizarInputsJugadores() {
+            const cant = parseInt(document.getElementById('cant-jugadores').value);
+            document.getElementById('val-cantidad').innerText = cant;
+            const container = document.getElementById('contenedor-nombres');
+            container.innerHTML = "";
+            for (let i = 0; i < cant; i++) {
+                container.innerHTML += `<input type="text" id="jname-${i}" class="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm text-white outline-none focus:border-dorado" placeholder="Jugador ${i+1}">`;
+            }
+        }
+
+        function empezarPartida() {
+            const cant = parseInt(document.getElementById('cant-jugadores').value);
+            estado.jugadores = [];
+            for (let i = 0; i < cant; i++) {
+                const inputVal = document.getElementById(`jname-${i}`).value.trim();
+                estado.jugadores.push({
+                    id: i,
+                    nombre: inputVal || `Jugador ${i + 1}`
+                });
+            }
+            estado.rondaActual = 1;
+            ocultarPantallas();
+            document.getElementById('pantalla-ronda').classList.remove('hidden');
+            montarFaseElegirRey();
+        }
+
+        function montarFaseElegirRey() {
+            document.getElementById('info-ronda').innerText = `RONDA ${estado.rondaActual} / ${estado.totalRondas}`;
+            document.getElementById('subfase-elegir-rey').classList.remove('hidden');
+            document.getElementById('subfase-consigna').classList.add('hidden');
+            document.getElementById('subfase-veredicto').classList.add('hidden');
+
+            const listaReyes = document.getElementById('lista-reyes');
+            listaReyes.innerHTML = "";
+            estado.jugadores.forEach(j => {
+                listaReyes.innerHTML += `<button onclick="seleccionarRey(${j.id})" class="bg-neutral-900 border border-neutral-800 p-3 rounded-lg font-medium hover:border-dorado transition-colors">${j.nombre}</button>`;
+            });
+        }
+
+        function seleccionarRey(id) {
+            estado.reyId = id;
+            estado.elegidos = [];
+            estado.veredictos = {};
+            estado.prendaActual = PRENDAS[Math.floor(Math.random() * PRENDAS.length)];
+            
+            document.getElementById('subfase-elegir-rey').classList.add('hidden');
+            document.getElementById('subfase-consigna').classList.remove('hidden');
+            
+            const reyNombre = estado.jugadores.find(j => j.id === id).nombre;
+            document.getElementById('titulo-consigna').innerText = `Orden del Rey ${reyNombre}`;
+            document.getElementById('texto-consigna').innerText = `"${estado.prendaActual}"`;
+
+            const listaAfectados = document.getElementById('lista-afectados');
+            listaAfectados.innerHTML = "";
+            estado.jugadores.filter(j => j.id !== id).forEach(j => {
+                listaAfectados.innerHTML += `<button id="btn-afectado-${j.id}" onclick="alternarElegido(${j.id})" class="p-2 rounded border text-xs bg-neutral-900 border-neutral-800 text-neutral-300 transition-all">${j.nombre}</button>`;
+            });
+
+            actualizarBotonVeredicto();
+        }
+
+        function alternarElegido(id) {
+            const index = estado.elegidos.indexOf(id);
+            const btn = document.getElementById(`btn-afectado-${id}`);
+            if (index > -1) {
+                estado.elegidos.splice(index, 1);
+                btn.className = "p-2 rounded border text-xs bg-neutral-900 border-neutral-800 text-neutral-300 transition-all";
+            } else {
+                estado.elegidos.push(id);
+                btn.className = "p-2 rounded border text-xs bg-dorado border-dorado text-negro font-bold transition-all";
+            }
+            actualizarBotonVeredicto();
+        }
+
+        function actualizarBotonVeredicto() {
+            const btn = document.getElementById('btn-ir-veredicto');
+            if (estado.elegidos.length > 0) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+            }
+        }
+
+        function irAVeredicto() {
+            document.getElementById('subfase-consigna').classList.add('hidden');
+            document.getElementById('subfase-veredicto').classList.remove('hidden');
+
+            const listaVer = document.getElementById('lista-veredictos');
+            listaVer.innerHTML = "";
+            estado.elegidos.forEach(id => {
+                const jNombre = estado.jugadores.find(j => j.id === id).nombre;
+                estado.veredictos[id] = true; // Por defecto Sí
+                listaVer.innerHTML += `
+                    <div class="bg-neutral-900 border border-neutral-800 p-3 rounded-lg flex justify-between items-center">
+                        <span class="text-sm font-medium">${jNombre}</span>
+                        <div class="flex gap-2">
+                            <button id="v-si-${id}" onclick="setVeredicto(${id}, true)" class="px-3 py-1 rounded text-xs font-bold bg-green-600 text-white">SÍ</button>
+                            <button id="v-no-${id}" onclick="setVeredicto(${id}, false)" class="px-3 py-1 rounded text-xs font-bold bg-neutral-800 text-neutral-400">NO</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function setVeredicto(id, cumplio) {
+            estado.veredictos[id] = cumplio;
+            const btnSi = document.getElementById(`v-si-${id}`);
+            const btnNo = document.getElementById(`v-no-${id}`);
+            if (cumplio) {
+                btnSi.className = "px-3 py-1 rounded text-xs font-bold bg-green-600 text-white";
+                btnNo.className = "px-3 py-1 rounded text-xs font-bold bg-neutral-800 text-neutral-400";
+            } else {
+                btnSi.className = "px-3 py-1 rounded text-xs font-bold bg-neutral-800 text-neutral-400";
+                btnNo.className = "px-3 py-1 rounded text-xs font-bold bg-red-600 text-white";
+            }
+        }
+
+        function guardarRonda() {
+            if (estado.rondaActual >= estado.totalRondas) {
+                ocultarPantallas();
+                document.getElementById('pantalla-final').classList.remove('hidden');
+            } else {
+                estado.rondaActual++;
+                montarFaseElegirRey();
+            }
+        }
     </script>
 </body>
 </html>
