@@ -2,7 +2,7 @@
   "name": "El Rey Manda",
   "short_name": "El Rey Manda",
   "description": "El juego donde mandan las ganas · +18",
-  "start_url": "start_url": "/el-rey-manda/landing.html",
+  "start_url": "/el-rey-manda/landing.html",
   "scope": "/el-rey-manda/",
   "display": "standalone",
   "background_color": "#080808",
