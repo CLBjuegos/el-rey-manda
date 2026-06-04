@@ -140,7 +140,7 @@
                 <div id="lista-reyes" class="grid grid-cols-2 gap-2"></div>
             </div>
 
-            <!-- Subfase 2: Mostrar Consigna -->
+            <!-- Subfase 2: Show Consigna -->
             <div id="subfase-consigna" class="hidden space-y-4 text-center">
                 <div class="bg-dorado/10 border border-dorado/20 rounded-xl p-5">
                     <h4 id="titulo-consigna" class="text-xs text-dorado tracking-widest uppercase mb-1">Orden del Rey</h4>
@@ -267,7 +267,7 @@
                 const data = await r.json();
                 if (data && data.length > 0 && data[0].activo) {
                     localStorage.setItem('rm_activacion', JSON.stringify({ nombre: user, codigo: codigo }));
-                    estado.activado = true;
+                    estado.activated = true;
                     ocultarPantallas();
                     document.getElementById('pantalla-menu').classList.remove('hidden');
                 } else {
