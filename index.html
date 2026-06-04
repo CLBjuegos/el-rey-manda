@@ -48,12 +48,6 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .num-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem}
 .btn-num{background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--blanco);padding:.6rem .2rem;font-family:'Playfair Display',serif;font-size:.95rem;cursor:pointer;border-radius:3px;transition:all .2s}
 .btn-num.on{background:var(--oro);color:var(--negro);font-weight:700;border-color:var(--oro)}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.toggle{width:50px;height:26px;background:#333;border-radius:13px;border:none;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0}
-.toggle.on{background:var(--violeta)}
-.toggle::after{content:'';position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .3s}
-.toggle.on::after{left:27px}
-.toggle-desc{font-size:.85rem;color:rgba(245,240,232,.55);margin-top:.25rem}
 .rondas-row{display:flex;align-items:center;gap:1rem;justify-content:center}
 .btn-circ{background:transparent;border:1px solid rgba(201,168,76,.4);color:var(--oro);width:38px;height:38px;border-radius:50%;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .rondas-n{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--oro-claro);width:60px;text-align:center}
@@ -118,7 +112,7 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .nav-bar-container{display:flex;gap:.4rem;justify-content:center;width:100%;max-width:520px;margin:0 auto}
 .nav-btn{background:transparent;border:1px solid rgba(201,168,76,.2);color:rgba(245,240,232,.5);padding:.55rem .6rem;font-size:.78rem;cursor:pointer;letter-spacing:1px;transition:all .2s;flex:1;max-width:110px;border-radius:3px}
 .nav-btn.on{background:rgba(201,168,76,.1);border-color:var(--oro);color:var(--oro-claro)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);zIndex:99999;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1.5rem}
 .modal-content{background:var(--negro);border:1px solid var(--oro);padding:1.5rem;max-width:450px;width:100%;border-radius:6px;max-height:80vh;overflow-y:auto}
 </style>
 </head>
@@ -151,12 +145,12 @@ const INIT={
     {id:'t8',txt:'Mínimo 4 participantes. Se vendan los ojos al primer elegido/a y se lo sienta en una silla. Los demás se colocan de a uno frente a él/ella sin hablar ni tocar nada. El/la vendado/a deberá tocar las colas (nalgas) de cada uno con sus manos e intentar descubrir quién es quién. Cada acierto suma un punto extra solo al/la participante de ojos vendados.'},
     {id:'t9',txt:'Los participantes elegidos deberán acercarse al Rey/Reyna y darle un beso "piquito" en la boca. Su Majestad puede elegir otro participante de los elegidos si no desea que lo/la besen a él/ella.'},
     {id:'t10',txt:'Mínimo 4 participantes. 1 minuto cada uno/a. Escena imaginaria en ascensor cerrado: 1 es el/la jefe/a, los otros 3 son empleados/as. De a uno/a a la vez, los empleados/as deben conquistar y convencer a su jefe/a de otorgarles un aumento de sueldo de la forma más sensual posible. Todo recurso es válido pero sin tocarse. Todos suman 1 punto.'},
-    {id:'t11',txt:'Mínimo 2, máximo 6 participantes (en parejas). 1 minuto cada uno/a. Escena imaginaria: pareja en la cama. Cada uno/a deberá explicar a su pareja circunstancial improvisando por qué esa noche no logró excitarse, incluyendo obligatoriamente una de las siguientes palabras: Termo, Empanada, Maní, Cacerola. Cada uno elige su palabra y no se pueden repetir. Suman 1 punto cada uno.'},
+    {id:'t11',txt:'Mínimo 2, maximum 6 participantes (en parejas). 1 minuto cada uno/a. Escena imaginaria: pareja en la cama. Cada uno/a deberá explicar a su pareja circunstancial improvisando por qué esa noche no logró excitarse, incluyendo obligatoriamente una de las siguientes palabras: Termo, Empanada, Maní, Cacerola. Cada uno elige su palabra y no se pueden repetir. Suman 1 punto cada uno.'},
     {id:'t12',txt:'1 minuto cada uno/a. Los números participantes deberán vender un consolador o vibrador al Rey/Reyna para su uso o de su pareja. Pueden ayudarse con el elemento real de haberlo, o con cualquier elemento fálico similar disponible. Deben incluir al menos 1 vez en su relato alguna de estas frases: "como una flor" o "la segunda ya va más fácil". Todos suman 1 punto.'},
-    {id:'t13',txt:'Los números elegidos deberán bailar "Pa\'Delante Pa\'Atrás" de Jean Carlos siguiendo la coreografía que announces la canción, bien juntitos en fila intercalando posiciones hombre/mujer/hombre durante todo el tema. Suman 1 punto cada uno si completan la consigna.'},
+    {id:'t13',txt:'Los números elegidos deberán bailar "Pa Alante Pa Atrás" de Jean Carlos siguiendo la coreografía que anuncie la canción, bien juntitos en fila intercalando posiciones hombre/mujer/hombre durante todo el tema. Suman 1 punto cada uno si completan la consigna.'},
     {id:'t14',txt:'Los elegidos/as deberán darse un beso de lengua de 20 segundos en grupos de 3, intercalando sexos. La persona que no quiera realizar la consigna pierde el turno; cumplirán entre los/las dos que acepten el reto. Suma 1 punto cada uno/a que cumpla.'},
-    {id:'t15',txt:'Todos los números deberán estar contra la pared, de espaldas, con las manos apoyadas en la pared (postura de operativo policial). El Rey/Reyna — o el reemplazo que Su Majestad elija entre los números — deberá hacer un "cacheo" a todos y uno por uno.'},
-    {id:'t16',txt:'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.'},
+    {id:'t15',txt:'Todos los números deberán estar contra la pared, de espaldas, con las manos apoyadas en la pared (postura de operativo policial). El Rey/Reyna o el reemplazo que Su Majestad elija entre los números deberá hacer un "cacheo" a todos y uno por uno.'},
+    {id:'t16',txt:'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.'}
   ],
   caliente:[
     {id:'c1',txt:'Tiempo 2 minutos. Los números que el Rey/Reyna elija deberán quitar 2 prendas de vestir en total a otra persona designada por el Rey/Reyna (quien debe quedarse parado/a sin moverse), utilizando solamente una mano cada uno/a y la boca.'},
@@ -172,14 +166,14 @@ const INIT={
     {id:'c11',txt:'Los participantes elegidos deberán mostrarle la cola al Rey/Reyna en ropa interior. Quienes tengan colaless o se la metan para lograrlo, suman punto. Quienes no lo hagan, no suman.'},
     {id:'c12',txt:'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían un pene, durante 15 segundos. Pueden utilizar dos dedos propios o ajenos, o una banana o cualquier elemento similar.'},
     {id:'c13',txt:'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían una vagina, durante 15 segundos. Pueden utilizar sus manos o ajenas, o una galletita, o cualquier elemento similar.'},
-    {id:'c14',txt:'Los participantes deberán bailar "El Meneaito" en ropa interior frente al Rey/Reyna.'},
+    {id:'c14',txt:'Los participantes deberán bailar El Meneaito en ropa interior frente al Rey/Reyna.'},
     {id:'c15',txt:'Los elegidos/as deberán hacer un "desfile de modas" con la ropa que les quedó puesta hasta ese momento del juego. El Rey/Reyna es el/la jurado/a. De a uno/a, cada participante debe mostrarse y realizar una acción distinta y original a libre elección: sacarse otra prenda, darle un beso a alguien, hacer un baile, una pose, mostrar una parte de su cuerpo, etc. No se puede repetir la misma acción. Todos suman 1 punto.'},
     {id:'c16',txt:'Los participantes elegidos deberán formar "la ronda de los elefantes": cada uno coloca su mano entre las piernas simulando la trompa, agarrando la cola (nalgas) de la persona que tiene adelante. La ronda no tiene principio ni fin. Deberán girar 3 vueltas completas sin desconectarse. Si alguna "trompa" se suelta, pierden todos los puntos y vuelven a empezar. Todos suman punto si completan. Los observadores pueden poner música o aplaudir para ambientar.'},
     {id:'c17',txt:'1 minuto cada uno/a. Los números elegidos deberán realizar un "baile del caño sensual" frente al Rey/Reyna, simulando ser un/a pooldancer. Deben ayudarse con un palo de escoba, secador o similar para emular la escenografía. Se puede musicalizar con música estilo striptease o rock pesado de los 80/90.'},
     {id:'c18',txt:'La lámpara de Aladino. Duración 2 minutos. Los números elegidos forman una ronda. Cada uno/a con su mano derecha "frota la lámpara" de la persona que tiene a su derecha durante 1 minuto. Luego cambian: mano izquierda al compañero/a de la izquierda durante 1 minuto. Todos suman punto.'},
     {id:'c19',txt:'El Rey/Reyna anota un número de una cifra en un papel y lo guarda sin que nadie lo vea. Luego elige los números participantes. Éstos arriesgan intentando adivinar de a uno/a por turno qué número escribió Su Majestad. Quien lo adivine tendrá el honor de ser masajeado/a por el Rey/Reyna en todo su cuerpo durante 2 minutos. Todos suman punto por participar. De no adivinarse el número, nadie suma puntos.'},
     {id:'c20',txt:'El Rey/Reyna elige 4 participantes. Tiempo 5 minutos. Acting tipo sketch: una pareja está en la cama entre besos y caricias. De repente llega el marido/la mujer de uno/a de ellos/as, se sorprende y enojado/a dice: "¡Así te quería agarrar!" A partir de ahí deben improvisar una escena de humor y erotismo donde finalmente terminan los 3 en la cama y de manera coherente suman a un/una cuarta participante. La escena debe cerrar obligatoriamente con: "¡Al final... felices los 4!" Todos suman punto.'},
-    {id:'c21',txt:'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.'},
+    {id:'c21',txt:'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.'}
   ],
   llamas:[
     {id:'l1',txt:'El Rey/Reyna elige participantes, mínimo 3, máximo 6. No importa el sexo. Deberán recrear una escena de película para adultos con diferentes roles asignados por Su Majestad: el cadete delivery, la dueña de casa que recibe la compra, el marido que mira escondido, el plomero que estaba trabajando en la casa, la mucama, la niñera. Cada uno tiene un rol y debe entrar en escena. Tienen 5 minutos. La escena debe terminar en una orgía entre todos los números participantes. Todos suman punto.'},
@@ -434,7 +428,7 @@ function App(){
                   );
                 })}
               </div>
-              <button class="btn-gold" style={{width:'100%',marginTop:'1rem'}} onClick={()=>{
+              <button class="btn-gold" style={{width:'100%',marginTop:'1rem'} } onClick={()=>{
                 let nextEq=juego.equipos.map(e=>{
                   if(juego.veredictos[e.id]===true){
                     return{...e,puntos:e.puntos+1};
@@ -499,9 +493,9 @@ function App(){
         <div class="modal-overlay">
           <div class="modal-content">
             <h2 style={{fontFamily:'Playfair Display',color:'var(--oro-claro)',marginBottom:'1rem',textAlign:'center'}}>Reglas de la Corona</h2>
-            <p style={{fontSize:'.95rem',line-height:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>1. El equipo seleccionado como <strong>Rey</strong> toma el control de la ronda y lee la consigna en voz alta.</p>
-            <p style={{fontSize:'.95rem',line-height:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>2. El Rey decide cuáles de los demás equipos quedan obligados a realizar el reto.</p>
-            <p style={{fontSize:'.95rem',line-height:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>3. Una vez finalizada la prueba, se evalúa quién cumplió. Los que digan <strong>SÍ</strong> sumarán un punto en el marcador general.</p>
+            <p style={{fontSize:'.95rem',lineHeight:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>1. El equipo seleccionado como <strong>Rey</strong> toma el control de la ronda y lee la consigna en voz alta.</p>
+            <p style={{fontSize:'.95rem',lineHeight:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>2. El Rey decide cuáles de los demás equipos quedan obligados a realizar el reto.</p>
+            <p style={{fontSize:'.95rem',lineHeight:1.6,color:'rgba(245,240,232,.8)',marginBottom:'.8rem'}}>3. Una vez finalizada la prueba, se evalúa quién cumplió. Los que digan <strong>SÍ</strong> sumarán un punto en el marcador general.</p>
             <button class="btn-outline" style={{width:'100%',marginTop:'1rem'}} onClick={()=>setModalReglas(false)}>ENTENDIDO</button>
           </div>
         </div>
