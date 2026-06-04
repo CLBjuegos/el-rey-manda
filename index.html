@@ -18,690 +18,236 @@
 </head>
 <body class="bg-stone-950 text-stone-100 font-sans min-h-screen flex flex-col">
 
-    <!-- Barra de Copyright Fija en la Parte Superior -->
+    <!-- Barra de Copyright -->
     <div class="w-full bg-stone-900/90 border-b border-amber-500/20 py-2 px-4 text-center z-50">
         <span class="font-royal text-xs text-amber-500 tracking-widest font-bold">© Carlos Lucas Bertarelli</span>
         <span class="text-xs text-amber-500/50 mx-2">·</span>
         <span class="text-xs text-stone-400 tracking-wider">Todos los derechos reservados · 2026 · Argentina</span>
     </div>
 
-    <!-- Contenedor Principal de la App -->
+    <!-- Contenedor de la Aplicación -->
     <div id="root" class="flex-1 flex flex-col justify-between pt-2 pb-24"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState } = React;
 
-        // Base de datos de prendas originales
         const prendasPredefinidas = {
             tibio: [
-                { id: 't1', texto: 'Los/las participantes seleccionados (máx. 8, en parejas según el Rey/Reyna) deberán mirarse durante 20 segundos, hacerse caras y gestos sensuales y sexuales sin reírse. Sonreír es válido. Si alguno/a se ríe, termina su turno, no suma puntos y pasa a la siguiente pareja.', nivel: 'tibio' },
-                { id: 't2', texto: 'Los/las participantes elegidos deberán masajear suavemente y con caricias los hombros, espalda y cintura del número elegido por el Rey/Reyna.', nivel: 'tibio' },
-                { id: 't3', texto: 'Los/las participantes seleccionados deberán desfilar lenta y sensualmente como en una pasarela, ida y vuelta, delante del Rey/Reyna. (Si ponen música va a resultar más divertido.) Todos suman punto.', nivel: 'tibio' },
-                { id: 't4', texto: 'Los participantes elegidos deberán adivinar el color de la ropa interior del Rey/Reyna, quien deberá mostrarla al finalizar la prenda para confirmar. Quien adivine suma punto extra. Todos suman 1 punto.', nivel: 'tibio' },
-                { id: 't5', texto: 'Los números elegidos deberán hacer un mini striptease mirando al Rey/Reyna. Tienen 1 minuto. (Si puede escucharse música acorde desde algún dispositivo, será aún más divertida.)', nivel: 'tibio' },
-                { id: 't6', texto: 'Los números elegidos deberán quitarse una prenda de vestir (la que quieran) y permanecer sin ella hasta el final de todas las rondas. No se cuentan accesorios. Cada vez que esta consigna se repita, deberá quitarse una prenda distinta.', nivel: 'tibio' },
-                { id: 't7', texto: 'Mínimo 4 participantes. Los números elegidos deberán hacer "el gusanito" en el piso alrededor del Rey/Reyna, gateando en ronda y bien pegaditos unos con otros, completando 3 vueltas completas.', nivel: 'tibio' },
-                { id: 't8', texto: 'Mínimo 4 participantes. Se vendan los ojos al primer elegido/a y se lo sienta en una silla. Los demás se colocan de a uno frente a él/ella sin hablar ni tocar nada. El/la vendado/a deberá tocar las colas (nalgas) de cada uno con sus manos e intentar descubrir quién es quién. Cada acierto suma un punto extra solo al/la participante de ojos vendados.', nivel: 'tibio' },
-                { id: 't9', texto: 'Los participantes elegidos deberán acercarse al Rey/Reyna y darle un beso "piquito" en la boca. Su Majestad puede elegir otro participante de los elegidos si no desea que lo/la besen a él/ella.', nivel: 'tibio' },
-                { id: 't10', texto: 'Mínimo 4 participantes. 1 minuto cada uno/a. Escena imaginaria en ascensor cerrado: 1 es el/la jefe/a, los otros 3 son empleados/as. De a uno/a a la vez, los empleados/as deben conquistar y convencer a su jefe/a de otorgarles un aumento de sueldo de la forma más sensual posible. Todo recurso es válido pero sin tocarse. Todos suman 1 punto.', nivel: 'tibio' },
-                { id: 't11', texto: 'Mínimo 2, maximum 6 participantes (en parejas). 1 minuto cada uno/a. Escena imaginaria: pareja en la cama. Cada uno/a deberá explicar a su pareja circunstancial improvisando por qué esa noche no logró excitarse, incluyendo obligatoriamente una de las siguientes palabras: Termo, Empanada, Maní, Cacerola. Cada uno elige su palabra y no se pueden repetir. Suman 1 punto cada uno.', nivel: 'tibio' },
-                { id: 't12', texto: '1 minuto cada uno/a. Los números participantes deberán vender un consolador o vibrador al Rey/Reyna para su uso o de su pareja. Pueden ayudarse con el elemento real de haberlo, o con cualquier elemento fálico similar disponible. Deben incluir al menos 1 vez en su relato alguna de estas frases: "como una flor" o "la segunda ya va más fácil". Todos suman 1 punto.', nivel: 'tibio' },
-                { id: 't13', texto: 'Los números elegidos deberán bailar "Pa Alante Pa Atrás" de Jean Carlos siguiendo la coreografía que anuncie la canción, bien juntitos en fila intercalando posiciones hombre/mujer/hombre durante todo el tema. Suman 1 punto cada uno si completan la consigna.', nivel: 'tibio' },
-                { id: 't14', texto: 'Los elegidos/as deberán darse un beso de lengua de 20 segundos en grupos de 3, intercalando sexos. La persona que no quiera realizar la consigna pierde el turno; cumplirán entre los/las dos que acepten el reto. Suma 1 punto cada uno/a que cumpla.', nivel: 'tibio' },
-                { id: 't15', texto: 'Todos los números deberán estar contra la pared, de espaldas, con las manos apoyadas en la pared (postura de operativo policial). El Rey/Reyna o el reemplazo que Su Majestad elija entre los números deberá hacer un "cacheo" a todos y uno por uno.', nivel: 'tibio' },
-                { id: 't16', texto: 'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.', nivel: 'tibio' }
+                { id: 't1', texto: 'Los/las participantes seleccionados (máx. 8, en parejas según el Rey/Reyna) deberán mirarse durante 20 segundos, hacerse caras y gestos sensuales y sexuales sin reírse. Sonreír es válido. Si alguno/a se ríe, termina su turno, no suma puntos y pasa a la siguiente pareja.' },
+                { id: 't2', texto: 'Los/las participantes elegidos deberán masajear suavemente y con caricias los hombros, espalda y cintura del número elegido por el Rey/Reyna.' },
+                { id: 't3', texto: 'Los/las participantes seleccionados deberán desfilar lenta y sensualanmente como en una pasarela, ida y vuelta, delante del Rey/Reyna. (Si ponen música va a resultar más divertido.) Todos suman punto.' },
+                { id: 't4', texto: 'Los participantes elegidos deberán adivinar el color de la ropa interior del Rey/Reyna, quien deberá mostrarla al finalizar la prenda para confirmar. Quien adivine suma punto extra. Todos suman 1 punto.' },
+                { id: 't5', texto: 'Los números elegidos deberán hacer un mini striptease mirando al Rey/Reyna. Tienen 1 minuto. (Si puede escucharse música acorde desde algún dispositivo, será aún más divertida.)' },
+                { id: 't6', texto: 'Los números elegidos deberán quitarse una prenda de vestir (la que quieran) y permanecer sin ella hasta el final de todas las rondas. No se cuentan accesorios. Cada vez que esta consigna se repita, deberá quitarse una prenda distinta.' },
+                { id: 't7', texto: 'Mínimo 4 participantes. Los números elegidos deberán hacer "el gusanito" en el piso alrededor del Rey/Reyna, gateando en ronda y bien pegaditos unos con otros, completando 3 vueltas completas.' },
+                { id: 't8', texto: 'Mínimo 4 participantes. Se vendan los ojos al primer elegido/a y se lo sienta en una silla. Los demás se colocan de a uno frente a él/ella sin hablar ni tocar nada. El/la vendado/a deberá tocar las colas (nalgas) de cada uno con sus manos e intentar descubrir quién es quién. Cada acierto suma un punto extra solo al/la participante de ojos vendados.' },
+                { id: 't9', texto: 'Los participantes elegidos deberán acercarse al Rey/Reyna y darle un beso "piquito" en la boca. Su Majestad puede elegir otro participante de los elegidos si no desea que lo/la besen a él/ella.' },
+                { id: 't10', texto: 'Mínimo 4 participantes. 1 minuto cada uno/a. Escena imaginaria en ascensor cerrado: 1 es el/la jefe/a, los otros 3 son empleados/as. De a uno/a a la vez, los empleados/as deben conquistar y convencer a su jefe/a de otorgarles un aumento de sueldo de la forma más sensual posible. Todo recurso es válido pero sin tocarse. Todos suman 1 punto.' },
+                { id: 't11', texto: 'Mínimo 2, maximum 6 participantes (en parejas). 1 minuto cada uno/a. Escena imaginaria: pareja en la cama. Cada uno/a deberá explicar a su pareja circunstancial improvisando por qué esa noche no logró excitarse, incluyendo obligatoriamente una de las siguientes palabras: Termo, Empanada, Maní, Cacerola. Cada uno elige su palabra y no se pueden repetir. Suman 1 punto cada uno.' },
+                { id: 't12', texto: '1 minuto cada uno/a. Los números participantes deberán vender un consolador o vibrador al Rey/Reyna para su uso o de su pareja. Pueden ayudarse con el elemento real de haberlo, o con cualquier elemento fálico similar disponible. Deben incluir al menos 1 vez en su relato alguna de estas frases: "como una flor" o "la segunda ya va más fácil". Todos suman 1 punto.' },
+                { id: 't13', texto: 'Los números elegidos deberán bailar "Pa Alante Pa Atrás" de Jean Carlos siguiendo la coreografía que anuncie la canción, bien juntitos en fila intercalando posiciones hombre/mujer/hombre durante todo el tema. Suman 1 punto cada uno si completan la consigna.' },
+                { id: 't14', texto: 'Los elegidos/as deberán darse un beso de lengua de 20 segundos en grupos de 3, intercalando sexos. La persona que no quiera realizar la consigna pierde el turno; cumplirán entre los/las dos que acepten el reto. Suma 1 punto cada uno/a que cumpla.' },
+                { id: 't15', texto: 'Todos los números deberán estar contra la pared, de espaldas, con las manos apoyadas en la pared (postura de operativo policial). El Rey/Reyna o el reemplazo que Su Majestad elija entre los números deberá hacer un "cacheo" a todos y uno por uno.' },
+                { id: 't16', texto: 'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.' }
             ],
             caliente: [
-                { id: 'c1', texto: 'Tiempo 2 minutos. Los números que el Rey/Reyna elija deberán quitar 2 prendas de vestir en total a otra persona designada por el Rey/Reyna (quien debe quedarse parado/a sin moverse), utilizando solamente una mano cada uno/a y la boca.', nivel: 'caliente' },
-                { id: 'c2', texto: 'Los/las participantes elegidos/as deberán hacer un baile tipo striptease dedicado al Rey/Reyna hasta quedar en ropa interior. Se pueden ayudar unos con otros/as. Suman puntos individuales si completan estrictamente la consigna. (Será más divertida si la musicalizan con algún dispositivo.)', nivel: 'caliente' },
-                { id: 'c3', texto: 'Los números elegidos/as deberán demostrar su destreza en seducción intentando convencer al Rey/Reyna sutilmente para tener sexo. No podrán hablar, solamente gesticular, tocarse, mostrarse y mover sus manos para tal fin. Tienen 2 minutos cada uno/a.', nivel: 'caliente' },
-                { id: 'c4', texto: 'Tiempo 30 segundos. Los designados/as deberán emular una relación sexual hasta llegar al clímax, con sus gemidos, ruidos y gestos correspondientes, ante todos los/las presentes. Suman 1 punto cada uno/a.', nivel: 'caliente' },
-                { id: 'c5', texto: 'Mínimo 4 participantes. Se forman parejas. Cada pareja tiene 10 segundos para darse el beso más fogoso posible. Los observadores puntúan del 1 al 10. Todos suman 1 punto.', nivel: 'caliente' },
-                { id: 'c6', texto: 'El Rey/Reyna elige a 2 personas. Deberán bailar pegados/as con una hoja de papel entre sus cuerpos sin que caiga al piso, al ritmo de música brasileña movida o reggaeton. 1 minuto. Si la hoja cae, pierden el punto. Si la mantienen, ambos suman.', nivel: 'caliente' },
-                { id: 'c7', texto: 'El Rey/Reyna decide los números de los/las plebeyos/as que se quitarán una prenda de vestir. No válido pañuelo ni accesorios. Las prendas son acumulativas y no se vuelven a colocar hasta finalizar el juego.', nivel: 'caliente' },
-                { id: 'c8', texto: 'El Rey/Reyna decide los números de los/las plebeyos/as que se quitarán una prenda de vestir. No válido pañuelo ni accesorios. Las prendas son acumulativas y no se vuelven a colocar hasta finalizar el juego.', nivel: 'caliente' },
-                { id: 'c9', texto: 'El Rey/Reyna decide los números de los/las plebeyos/as que se quitarán una prenda de vestir. No válido pañuelo ni accesorios. Las prendas son acumulativas y no se vuelven a colocar hasta finalizar el juego.', nivel: 'caliente' },
-                { id: 'c10', texto: 'El Rey/Reyna decide los números de los/las plebeyos/as que se quitarán una prenda de vestir. No válido pañuelo ni accesorios. Las prendas son acumulativas y no se vuelven a colocar hasta finalizar el juego.', nivel: 'caliente' },
-                { id: 'c11', texto: 'Los participantes elegidos deberán mostrarle la cola al Rey/Reyna en ropa interior. Quienes tengan colaless o se la metan para lograrlo, suman punto. Quienes no lo hagan, no suman.', nivel: 'caliente' },
-                { id: 'c12', texto: 'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían un pene, durante 15 segundos. Pueden utilizar dos dedos propios o ajenos, o una banana o cualquier elemento similar.', nivel: 'caliente' },
-                { id: 'c13', texto: 'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían una vagina, durante 15 segundos. Pueden utilizar sus manos o ajenas, o una galletita, o cualquier elemento similar.', nivel: 'caliente' },
-                { id: 'c14', texto: 'Los participantes deberán bailar El Meneaito en ropa interior frente al Rey/Reyna.', nivel: 'caliente' },
-                { id: 'c15', texto: 'Los elegidos/as deberán hacer un "desfile de modas" con la ropa que les quedó puesta hasta ese momento del juego. El Rey/Reyna es el/la jurado/a. De a uno/a, cada participante debe mostrarse y realizar una acción distinta y original a libre elección: sacarse otra prenda, darle un beso a alguien, hacer un baile, una pose, mostrar una parte de su cuerpo, etc. No se puede repetir la misma acción. Todos suman 1 punto.', nivel: 'caliente' },
-                { id: 'c16', texto: 'Los participantes elegidos deberán formar "la ronda de los elefantes": cada uno coloca su mano entre las piernas simulando la trompa, agarrando la cola (nalgas) de la persona que tiene adelante. La ronda no tiene principio ni fin. Deberán girar 3 vueltas completas sin desconectarse. Si alguna "trompa" se suelta, pierden todos los puntos y vuelven a empezar. Todos suman punto si completan. Los observadores pueden poner música o aplaudir para ambientar.', nivel: 'caliente' },
-                { id: 'c17', texto: '1 minuto cada uno/a. Los números elegidos deberán realizar un "baile del caño sensual" frente al Rey/Reyna, simulando ser un/a pooldancer. Deben ayudarse con un palo de escoba, secador o similar para emular la escenografía. Se puede musicalizar con música estilo striptease o rock pesado de los 80/90.', nivel: 'caliente' },
-                { id: 'c18', texto: 'La lámpara de Aladino. Duración 2 minutos. Los números elegidos forman una ronda. Cada uno/a con su mano derecha "frota la lámpara" de la persona que tiene a su derecha durante 1 minuto. Luego cambian: mano izquierda al compañero/a de la izquierda durante 1 minuto. Todos suman punto.', nivel: 'caliente' },
-                { id: 'c19', texto: 'El Rey/Reyna anota un número de una cifra en un papel y lo guarda sin que nadie lo vea. Luego elige los números participantes. Éstos arriesgan intentando adivinar de a uno/a por turno qué número escribió Su Majestad. Quien lo adivine tendrá el honor de ser masajeado/a por el Rey/Reyna en todo su cuerpo durante 2 minutos. Todos suman punto por participar. De no adivinarse el número, nadie suma puntos.', nivel: 'caliente' },
-                { id: 'c20', texto: 'El Rey/Reyna elige 4 participantes. Tiempo 5 minutos. Acting tipo sketch: una pareja está en la cama entre besos y caricias. De repente llega el marido/la mujer de uno/a de ellos/as, se sorprende y enojado/a dice: "¡Así te quería agarrar!" A partir de ahí deben improvisar una escena de humor y erotismo donde finalmente terminan los 3 en la cama y de manera coherente suman a un/una cuarta participante. La escena debe cerrar obligatoriamente con: "¡Al final... felices los 4!" Todos suman punto.', nivel: 'caliente' },
-                { id: 'c21', texto: 'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.', nivel: 'caliente' }
+                { id: 'c1', texto: 'Tiempo 2 minutos. Los números que el Rey/Reyna elija deberán quitar 2 prendas de vestir en total a otra persona designada por el Rey/Reyna (quien debe quedarse parado/a sin moverse), utilizando solamente una mano cada uno/a y la boca.' },
+                { id: 'c2', texto: 'Los/las participantes elegidos/as deberán hacer un baile tipo striptease dedicado al Rey/Reyna hasta quedar en ropa interior. Se pueden ayudar unos con otros/as. Suman puntos individuales si completan estrictamente la consigna. (Será más divertida si la musicalizan con algún dispositivo.)' },
+                { id: 'c3', texto: 'Los números elegidos/as deberán demostrar su destreza en seducción intentando convencer al Rey/Reyna sutilmente para tener sexo. No podrán hablar, solamente gesticular, tocarse, mostrarse y mover sus manos para tal fin. Tienen 2 minutos cada uno/a.' },
+                { id: 'c4', texto: 'Tiempo 30 segundos. Los designados/as deberán emular una relación sexual hasta llegar al clímax, con sus gemidos, ruidos y gestos correspondientes, ante todos los/las presentes. Suman 1 punto cada uno/a.' },
+                { id: 'c5', texto: 'Mínimo 4 participantes. Se forman parejas. Cada pareja tiene 10 segundos para darse el beso más fogoso posible. Los observadores puntúan del 1 al 10. Todos suman 1 punto.' },
+                { id: 'c6', texto: 'El Rey/Reyna elige a 2 personas. Deberán bailar pegados/as con una hoja de papel entre sus cuerpos sin que caiga al piso, al ritmo de música brasileña movida o reggaeton. 1 minuto. Si la hoja cae, pierden el punto. Si la mantienen, ambos suman.' },
+                { id: 'c7', texto: 'El Rey/Reyna decide los números de los/las plebeyos/as que se quitarán una prenda de vestir. No válido pañuelo ni accesorios. Las prendas son acumulativas y no se vuelven a colocar hasta finalizar el juego.' },
+                { id: 'c11', texto: 'Los participantes elegidos deberán mostrarle la cola al Rey/Reyna en ropa interior. Quienes tengan colaless o se la metan para lograrlo, suman punto. Quienes no lo hagan, no suman.' },
+                { id: 'c12', texto: 'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían un pene, durante 15 segundos. Pueden utilizar dos dedos propios o ajenos, o una banana o cualquier elemento similar.' },
+                { id: 'c13', texto: 'Los números elegidos deberán demostrar frente al Rey/Reyna cómo succionarían una vagina, durante 15 segundos. Pueden utilizar sus manos o ajenas, o una galletita, o cualquier elemento similar.' },
+                { id: 'c14', texto: 'Los participantes deberán bailar El Meneaito en ropa interior frente al Rey/Reyna.' },
+                { id: 'c15', texto: 'Los elegidos/as deberán hacer un "desfile de modas" con la ropa que les quedó puesta hasta ese momento del juego. El Rey/Reyna es el/la jurado/a. De a uno/a, cada participante debe mostrarse y realizar una acción distinta y original a libre elección: sacarse otra prenda, darle un beso a alguien, hacer un baile, una pose, mostrar una parte de su cuerpo, etc. No se puede repetir la misma acción. Todos suman 1 punto.' },
+                { id: 'c16', texto: 'Los participantes elegidos deberán formar "la ronda de los elefantes": cada uno coloca su mano entre las piernas simulando la trompa, agarrando la cola (nalgas) de la persona que tiene adelante. La ronda no tiene principio ni fin. Deberán girar 3 vueltas completas sin desconectarse. Si alguna "trompa" se suelta, pierden todos los puntos y vuelven a empezar. Todos suman punto si completan. Los observadores pueden poner música o aplaudir para ambientar.' },
+                { id: 'c17', texto: '1 minuto cada uno/a. Los números elegidos deberán realizar un "baile del caño sensual" frente al Rey/Reyna, simulando ser un/a pooldancer. Deben ayudarse con un palo de escoba, secador o similar para emular la escenografía. Se puede musicalizar con música estilo striptease o rock pesado de los 80/90.' },
+                { id: 'c18', texto: 'La lámpara de Aladino. Duración 2 minutos. Los números elegidos forman una ronda. Cada uno/a con su mano derecha "frota la lámpara" de la persona que tiene a su derecha durante 1 minuto. Luego cambian: mano izquierda al compañero/a de la izquierda durante 1 minuto. Todos suman punto.' },
+                { id: 'c19', texto: 'El Rey/Reyna anota un número de una cifra en un papel y lo guarda sin que nadie lo vea. Luego elige los números participantes. Éstos arriesgan intentando adivinar de a uno/a por turno qué número escribió Su Majestad. Quien lo adivine tendrá el honor de ser masajeado/a por el Rey/Reyna en todo su cuerpo durante 2 minutos. Todos suman punto por participar. De no adivinarse el número, nadie suma puntos.' },
+                { id: 'c20', texto: 'El Rey/Reyna elige 4 participantes. Tiempo 5 minutos. Acting tipo sketch: una pareja está en la cama entre besos y caricias. De repente llega el marido/la mujer de uno/a de ellos/as, se sorprende y enojado/a dice: "¡Así te quería agarrar!" A partir de ahí deben improvisar una escena de humor y erotismo donde finalmente terminan los 3 en la cama y de manera coherente suman a un/una cuarta participante. La escena debe cerrar obligatoriamente con: "¡Al final... felices los 4!" Todos suman punto.' },
+                { id: 'c21', texto: 'Los números elegidos deberán ir a buscar a sus parejas reales (en caso de no tener, podrán elegir a otra persona), ponerlos/as de pie, mirarse a los ojos y darse un abrazo bien cálido y amoroso. Ambos cierran los ojos durante 10 segundos y luego vuelven a sus lugares. Todos los elegidos suman punto.' }
             ],
             llamas: [
-                { id: 'l1', texto: 'El Rey/Reyna elige participantes, mínimo 3, máximo 6. No importa el sexo. Deberán recrear una escena de película para adultos con diferentes roles asignados por Su Majestad: el cadete delivery, la dueña de casa que recibe la compra, el marido que mira escondido, el plomero que estaba trabajando en la casa, la mucama, la niñera. Cada uno tiene un rol y debe entrar en escena. Tienen 5 minutos. La escena debe terminar en una orgía entre todos los números participantes. Todos suman punto.', nivel: 'llamas' },
-                { id: 'l2', texto: 'El Rey/Reyna eligirá y definirá las parejas de números que deberán besarse y tocarse mutuamente de forma sensual y apasionada durante 20 segundos. Todos suman punto.', nivel: 'llamas' },
-                { id: 'l3', texto: 'Los números elegidos deberán ponerse frente al Rey/Reyna y quitarle al compañero/a de su derecha 1 prenda de vestir de manera lenta y sensual, sin que el/la desvestido/a se mueva o lo ayude. No válido: accesorios, pañuelos, medias. Las prendas no se vuelven a colocar hasta finalizar el juego.', nivel: 'llamas' },
-                { id: 'l4', texto: 'Los números elegidos deberán ponerse frente al Rey/Reyna y quitarle al compañero/a de su derecha 1 prenda de vestir de manera lenta y sensual, sin que el/la desvestido/a se mueva o lo ayude. No válido: accesorios, pañuelos, medias. Las prendas no se vuelven a colocar hasta finalizar el juego.', nivel: 'llamas' },
-                { id: 'l5', texto: 'Los números elegidos deberán ponerse frente al Rey/Reyna y quitarle al compañero/a de su derecha 1 prenda de vestir de manera lenta y sensual, sin que el/la desvestido/a se mueva o lo ayude. No válido: accesorios, pañuelos, medias. Las prendas no se vuelven a colocar hasta finalizar el juego.', nivel: 'llamas' },
-                { id: 'l6', texto: 'Los números elegidos deberán ponerse frente al Rey/Reyna y quitarle al compañero/a de su derecha 1 prenda de vestir de manera lenta y sensual, sin que el/la desvestido/a se mueva o lo ayude. No válido: accesorios, pañuelos, medias. Las prendas no se vuelven a colocar hasta finalizar el juego.', nivel: 'llamas' },
-                { id: 'l7', texto: 'Los números elegidos deberán ponerse frente al Rey/Reyna y quitarle al compañero/a de su derecha 1 prenda de vestir de manera lenta y sensual, sin que el/la desvestido/a se mueva o lo ayude. No válido: accesorios, pañuelos, medias. Las prendas no se vuelven a colocar hasta finalizar el juego.', nivel: 'llamas' },
-                { id: 'l8', texto: 'La carrera de caballos. Tiempo 30 segundos. Los elegidos/as forman parejas sin importar el sexo. Uno/a (el caballo) se sienta en una silla o sillón y recibe a su pareja (el/la jockey), quien se sienta sobre él/ella dándole la espalda. Una vez ubicadas las parejas una al lado de la otra, el Rey/Reyna da la orden de largada y comienzan a cabalgar suavemente durante 30 segundos. Su Majestad controla el tiempo y da por terminada la prenda. Todos suman punto.', nivel: 'llamas' },
-                { id: 'l9', texto: 'Los elegidos/as deberán demostrar en pareja cómo succionarían un pene y una vagina de forma explícita, durante 20 segundos cada uno/a, primero uno y luego el otro, frente al Rey/Reyna. Pueden utilizar dedos, manos, banana, galletita o elementos similares.', nivel: 'llamas' },
-                { id: 'l10', texto: 'La lámpara de Aladino versión hot. Los elegidos/as forman una ronda. Cada uno/a frota con su mano por dentro de la ropa interior del/la compañero/a de su derecha durante 1 minuto. Luego cambian de lado. Todos suman punto.', nivel: 'llamas' },
-                { id: 'l11', texto: 'La ronda de los elefantes versión hot. Los participantes elegidos/as forman una ronda en ropa interior: cada uno coloca su mano entre las piernas agarrando la cola (nalgas) de la persona que tiene adelante. Deberán girar 3 vueltas completas sin soltarse. Si alguno se suelta, pierden todos y vuelven a empezar. Todos suman punto si completan.', nivel: 'llamas' },
-                { id: 'l12', texto: 'Los números elegidos deberán realizar un 69 frente al Rey/Reyna. En caso de no querer hacer sexo oral, vale también la masturbación mutua con la mano.', nivel: 'llamas' },
-                { id: 'l13', texto: 'Los números elegidos se dividen en grupos por sexo. Si manda el Rey: las mujeres hacen topless y de a uno ponen la cabeza del Rey entre sus pechos dejando que Su Majestad juegue durante 10 segundos. Los hombres elegidos solo miran. Si manda la Reyna: los hombres se arrodillan ante ella y le hacen sexo oral uno a uno durante 10 segundos cada uno. Las mujeres elegidas miran el disfrute de la Reyna. Todos suman punto.', nivel: 'llamas' },
-                { id: 'l14', texto: 'Los elegidos/as deberán buscar a su pareja de equipo real, sentarla en una silla y realizarle sexo oral durante 10 segundos. En caso de que el Rey/Reyna o el Comodín participen y también deban ser complacidos/as, quien lo haga suma 1 punto extra. De no hacerlo suma solo 1 punto.', nivel: 'llamas' },
-                { id: 'l15', texto: 'Las personas elegidas deberán pasar una por una y darle un beso seco al Rey/Reyna en su sexo. No importa el sexo de los participantes, todos cumplen la misma regla...', nivel: 'llamas' }
+                { id: 'l1', texto: 'El Rey/Reyna elige participantes, mínimo 3, máximo 6. No importa el sexo. Deberán recrear una escena de película para adultos con diferentes roles asignados por Su Majestad: el cadete delivery, la dueña de casa que recibe la compra, el marido que mira escondido, el plomero que estaba trabajando en la casa, la mucama, la niñera. Cada uno tiene un rol y debe entrar en escena. Tienen 5 minutos. La escena debe terminar en una orgía entre todos los números participantes. Todos suman punto.' },
+                { id: 'l2', texto: 'El Rey/Reyna eligirá y definirá las parejas de números que deberán besarse y tocarse mutuamente de forma sensual y apasionada durante 20 segundos. Todos suman punto.' },
+                { id: 'l3', texto: 'Los números elegidos deberán ponerse frente al Rey/Reyna y quitarle al compañero/a de su derecha 1 prenda de vestir de manera lenta y sensual, sin que el/la desvestido/a se mueva o lo ayude. No válido: accesorios, pañuelos, medias. Las prendas no se vuelven a colocar hasta finalizar el juego.' },
+                { id: 'l8', texto: 'La carrera de caballos. Tiempo 30 segundos. Los elegidos/as forman parejas sin importar el sexo. Uno/a (el caballo) se sienta en una silla o sillón y recibe a su pareja (el/la jockey), quien se sienta sobre él/ella dándole la espalda. Una vez ubicadas las parejas una al lado de la otra, el Rey/Reyna da la orden de largada y comienzan a cabalgar suavemente durante 30 segundos. Su Majestad controla el tiempo y da por terminada la prenda. Todos suman punto.' },
+                { id: 'l9', texto: 'Los elegidos/as deberán demostrar en pareja cómo succionarían un pene y una vagina de forma explícita, durante 20 segundos cada uno/a, primero uno y luego el otro, frente al Rey/Reyna. Pueden utilizar dedos, manos, banana, galletita o elementos similares.' },
+                { id: 'l10', texto: 'La lámpara de Aladino versión hot. Los elegidos/as forman una ronda. Cada uno/a frota con su mano por dentro de la ropa interior del/la compañero/a de su derecha durante 1 minuto. Luego cambian de lado. Todos suman punto.' },
+                { id: 'l11', texto: 'La ronda de los elefantes versión hot. Los participantes elegidos/as forman una ronda en ropa interior: cada uno coloca su mano entre las piernas agarrando la cola (nalgas) de la persona que tiene adelante. Deberán girar 3 vueltas completas sin soltarse. Si alguno se suelta, pierden todos y vuelven a empezar. Todos suman punto si completan.' },
+                { id: 'l12', texto: 'Los números elegidos deberán realizar un 69 frente al Rey/Reyna. En caso de no querer hacer sexo oral, vale también la masturbación mutua con la mano.' },
+                { id: 'l13', texto: 'Los números elegidos se dividen en grupos por sexo. Si manda el Rey: las mujeres hacen topless y de a uno ponen la cabeza del Rey entre sus pechos dejando que Su Majestad juegue durante 10 segundos. Los hombres elegidos solo miran. Si manda la Reyna: los hombres se arrodillan ante ella y le hacen sexo oral uno a uno durante 10 segundos cada uno. Las mujeres elegidas miran el disfrute de la Reyna. Todos suman punto.' },
+                { id: 'l14', texto: 'Los elegidos/as deberán buscar a su pareja de equipo real, sentarla en una silla y realizarle sexo oral durante 10 segundos. En caso de que el Rey/Reyna o el Comodín participen y también deban ser complacidos/as, quien lo haga suma 1 punto extra. De no hacerlo suma solo 1 punto.' },
+                { id: 'l15', texto: 'Las personas elegidas deberán pasar una por una y darle un beso seco al Rey/Reyna en su sexo. No importa el sexo de los participantes, todos cumplen la misma regla...' }
             ]
         };
 
-        function JuegoReyManda() {
-            const [vista, setVista] = useState('inicio'); // inicio, configuracion, juego, mazo, puntuacion
-            const [cantidadEquipos, setCantidadEquipos] = useState(4);
-            const [rondasTotales, setRondasTotales] = useState(10);
-            const [nombresEquipos, setNombresEquipos] = useState({});
-            const [intensidades, setIntensidades] = useState({ tibio: true, caliente: false, llamas: false });
-            const [prendasPersonalizadas, setPrendasPersonalizadas] = useState([]);
-            const [nuevaPrendaTexto, setNuevaPrendaTexto] = useState('');
-            const [nuevaPrendaNivel, setNuevaPrendaNivel] = useState('tibio');
-            
-            // Estado del juego en curso
-            const [partida, setPartida] = useState(null);
-            const [mostrarReglas, setMostrarReglas] = useState(false);
-            const [mensajeExito, setMensajeExito] = useState('');
+        function App() {
+            const [vista, setVista] = useState('configuracion'); // configuracion, juego
+            const [equipos, setEquipos] = useState([
+                { id: 1, nombre: '', integrantes: '', puntos: 0 },
+                { id: 2, nombre: '', integrantes: '', puntos: 0 }
+            ]);
+            const [intensidad, setIntensidad] = useState('tibio');
+            const [prendaActual, setPrendaActual] = useState(null);
 
-            // Colores estables para los equipos
-            const coloresEquipos = [
-                'border-amber-500 text-amber-400 bg-amber-500/10',
-                'border-purple-500 text-purple-400 bg-purple-500/10',
-                'border-emerald-500 text-emerald-400 bg-emerald-500/10',
-                'border-cyan-500 text-cyan-400 bg-cyan-500/10',
-                'border-red-500 text-red-400 bg-red-500/10',
-                'border-pink-500 text-pink-400 bg-pink-500/10'
-            ];
-
-            const coloresDot = [
-                'bg-amber-500', 'bg-purple-500', 'bg-emerald-500', 'bg-cyan-500', 'bg-red-500', 'bg-pink-500'
-            ];
-
-            const agregarPrendaCustom = () => {
-                if (!nuevaPrendaTexto.trim()) return;
-                const nueva = {
-                    id: 'custom-' + Date.now(),
-                    texto: nuevaPrendaTexto.trim(),
-                    nivel: nuevaPrendaNivel,
-                    isCustom: true
-                };
-                setPrendasPersonalizadas([...prendasPersonalizadas, nueva]);
-                setNuevaPrendaTexto('');
-                setMensajeExito('Prenda añadida al mazo real con éxito.');
-                setTimeout(() => setMensajeExito(''), 3000);
-            };
-
-            const eliminarPrendaCustom = (id) => {
-                setPrendasPersonalizadas(prendasPersonalizadas.filter(p => p.id !== id));
-            };
-
-            const iniciarPartida = () => {
-                // Consolidar prendas según intensidad
-                let pool = [];
-                if (intensidades.tibio) pool = [...pool, ...prendasPredefinidas.tibio, ...prendasPersonalizadas.filter(p => p.nivel === 'tibio')];
-                if (intensidades.caliente) pool = [...pool, ...prendasPredefinidas.caliente, ...prendasPersonalizadas.filter(p => p.nivel === 'caliente')];
-                if (intensidades.llamas) pool = [...pool, ...prendasPredefinidas.llamas, ...prendasPersonalizadas.filter(p => p.nivel === 'llamas')];
-                
-                if (pool.length === 0) {
-                    pool = [...prendasPredefinidas.tibio];
+            const agregarEquipo = () => {
+                if (equipos.length < 6) {
+                    setEquipos([...equipos, { id: Date.now(), nombre: '', integrantes: '', puntos: 0 }]);
                 }
-
-                // Crear estructura de equipos
-                const listaEquipos = [];
-                for (let i = 0; i < cantidadEquipos; i++) {
-                    listaEquipos.push({
-                        id: i,
-                        nombre: nombresEquipos[i]?.trim() || `Equipo ${i + 1}`,
-                        puntos: 0,
-                        colorClass: coloresEquipos[i],
-                        dotClass: coloresDot[i]
-                    });
-                }
-
-                setPartida({
-                    ronda: 1,
-                    equipos: listaEquipos,
-                    poolPrendas: pool,
-                    fase: 'seleccion_rey', // seleccion_rey, lanzar_prenda, votacion, fin
-                    reyActual: null,
-                    prendaActual: null,
-                    equiposSeleccionados: [],
-                    votos: {},
-                    historialUltimaPrenda: ''
-                });
-
-                setVista('juego');
             };
 
-            const reiniciarJuegoCompleto = () => {
-                setPartida(null);
-                setVista('inicio');
+            const removerEquipo = (id) => {
+                if (equipos.length > 2) {
+                    setEquipos(equipos.filter(e => e.id !== id));
+                }
+            };
+
+            const manejarCambioEquipo = (id, campo, valor) => {
+                setEquipos(equipos.map(e => e.id === id ? { ...e, [campo]: valor } : e));
+            };
+
+            const obtenerPrendaAleatoria = () => {
+                const lista = prendasPredefinidas[intensidad];
+                const random = Math.floor(Math.random() * lista.length);
+                setPrendaActual(lista[random]);
+            };
+
+            const modificarPuntos = (id, cantidad) => {
+                setEquipos(equipos.map(e => e.id === id ? { ...e, puntos: Math.max(0, e.puntos + cantidad) } : e));
             };
 
             return (
-                <div class="w-full max-w-md mx-auto px-4 flex flex-col justify-between h-full">
+                <div class="w-full max-w-md mx-auto px-4 py-6 flex-1 flex flex-col justify-between">
                     
-                    {/* VISTA: INICIO */}
-                    {vista === 'inicio' && (
-                        <div class="flex-1 flex flex-col items-center justify-center text-center px-4 py-12">
-                            <div class="text-6xl mb-4 animate-bounce text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">♛</div>
-                            <h1 class="font-royal text-4xl font-black tracking-widest bg-gradient-to-r from-amber-600 via-amber-200 to-amber-500 bg-clip-text text-transparent uppercase filter drop-shadow">
-                                El Rey Manda
-                            </h1>
-                            <p class="font-royal text-xs tracking-[0.25em] text-amber-500/80 uppercase mt-1">Board Game Premium</p>
-                            <p class="text-stone-400 text-sm mt-6 max-w-xs leading-relaxed">
-                                Ingresá a la corte del entretenimiento exclusivo. Diseñado para tablets y pantallas locales bajo licencia oficial.
-                            </p>
-                            
-                            <button 
-                                onClick={() => setVista('configuracion')}
-                                class="mt-10 bg-gradient-to-b from-amber-400 to-amber-600 text-stone-950 font-royal font-bold text-sm tracking-widest py-3 px-8 shadow-[0_4px_20px_rgba(245,158,11,0.3)] hover:brightness-115 transition active:scale-95 uppercase"
-                                style={{ clipPath: 'polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%)' }}
-                            >
-                                Configurar Servidor
-                            </button>
-                        </div>
-                    )}
-
-                    {/* VISTA: CONFIGURACIÓN */}
+                    {/* INTERFAZ DE CONFIGURACIÓN ORIGINAL */}
                     {vista === 'configuracion' && (
-                        <div class="flex-1 py-4">
-                            <h2 class="font-royal text-xl text-center text-amber-400 tracking-wider mb-6">Parámetros del Reino</h2>
-                            
-                            {/* Selector de equipos */}
-                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded mb-4">
-                                <label class="text-xs font-royal tracking-widest text-amber-500 block mb-3 uppercase">Cantidad de Equipos</label>
-                                <div class="grid grid-cols-5 gap-2">
-                                    {[2, 3, 4, 5, 6].map(num => (
-                                        <button 
-                                            key={num}
-                                            onClick={() => setQuantityEquipos(num)}
-                                            class={`py-2 text-sm font-royal font-bold border transition ${cantidadEquipos === num ? 'bg-amber-500 text-stone-950 border-amber-400 shadow' : 'border-stone-700 text-stone-300 hover:border-stone-500'}`}
-                                        >
-                                            {num}
-                                        </button>
-                                    ))}
-                                </div>
+                        <div class="space-y-6">
+                            <div class="text-center">
+                                <h1 class="font-royal text-3xl font-black tracking-widest text-amber-500 uppercase">El Rey Manda</h1>
+                                <p class="text-xs font-royal tracking-widest text-stone-400 mt-1">Gestión Local de Tablero</p>
                             </div>
 
-                            {/* Nombres de equipos */}
-                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded mb-4 max-h-52 overflow-y-auto">
-                                <label class="text-xs font-royal tracking-widest text-amber-500 block mb-2 uppercase">Identificación de Equipos</label>
-                                <div class="space-y-2">
-                                    {Array.from({ length: cantidadEquipos }).map((_, idx) => (
-                                        <div key={idx} class="flex items-center space-x-2">
-                                            <div class={`w-3 h-3 rounded-full ${coloresDot[idx] || 'bg-stone-500'}`}></div>
+                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-xs font-royal tracking-widest text-amber-500 uppercase font-bold">Registro de Parejas / Equipos</label>
+                                    {equipos.length < 6 && (
+                                        <button onClick={agregarEquipo} class="text-xs bg-amber-500 text-stone-950 font-bold px-2 py-1 rounded">
+                                            + Añadir
+                                        </button>
+                                    )}
+                                </div>
+                                
+                                <div class="space-y-3 max-h-64 overflow-y-auto pr-1">
+                                    {equipos.map((eq, index) => (
+                                        <div key={eq.id} class="bg-stone-950 p-3 rounded border border-stone-800 relative space-y-2">
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-xs font-mono text-stone-500 font-bold">Equipo #{index + 1}</span>
+                                                {equipos.length > 2 && (
+                                                    <button onClick={() => removerEquipo(eq.id)} class="text-red-500 text-xs font-bold px-1">✕</button>
+                                                )}
+                                            </div>
                                             <input 
                                                 type="text" 
-                                                placeholder={`Equipo ${idx + 1}`}
-                                                value={nombresEquipos[idx] || ''}
-                                                onChange={(e) => {
-                                                    const next = { ...nombresEquipos };
-                                                    next[idx] = e.target.value;
-                                                    setNombresEquipos(next);
-                                                }}
-                                                class="flex-1 bg-stone-950/80 border border-stone-800 px-3 py-1.5 text-sm text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500"
+                                                placeholder="Nombre del Equipo o Pareja"
+                                                value={eq.nombre}
+                                                onChange={(e) => manejarCambioEquipo(eq.id, 'nombre', e.target.value)}
+                                                class="w-full bg-stone-900 border border-stone-800 px-2 py-1 text-xs text-stone-100 rounded focus:outline-none focus:border-amber-500"
+                                            />
+                                            <input 
+                                                type="text" 
+                                                placeholder="Nombres de los integrantes (ej: Juan y Ana)"
+                                                value={eq.integrantes}
+                                                onChange={(e) => manejarCambioEquipo(eq.id, 'integrantes', e.target.value)}
+                                                class="w-full bg-stone-900 border border-stone-800 px-2 py-1 text-xs text-stone-400 rounded focus:outline-none focus:border-amber-500"
                                             />
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            {/* Cantidad de rondas */}
-                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded mb-4">
-                                <label class="text-xs font-royal tracking-widest text-amber-500 block mb-2 uppercase">Duración de la Partida</label>
-                                <div class="flex items-center justify-center space-x-6 py-1">
-                                    <button 
-                                        onClick={() => setRondasTotales(Math.max(5, rondasTotales - 5))}
-                                        class="w-9 h-9 rounded-full border border-stone-700 flex items-center justify-center text-stone-400 hover:border-stone-500 active:scale-90 font-bold"
-                                    >
-                                        -
-                                    </button>
-                                    <span class="font-royal text-2xl font-bold text-amber-200 w-12 text-center">{rondasTotales}</span>
-                                    <button 
-                                        onClick={() => setRondasTotales(Math.min(50, rondasTotales + 5))}
-                                        class="w-9 h-9 rounded-full border border-stone-700 flex items-center justify-center text-stone-400 hover:border-stone-500 active:scale-90 font-bold"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Filtro de intensidad */}
-                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded mb-6">
-                                <label class="text-xs font-royal tracking-widest text-amber-500 block mb-3 uppercase">Filtro de Intensidad</label>
-                                <div class="flex space-x-2">
-                                    <button 
-                                        onClick={() => setIntensidades({ ...intensidades, tibio: !intensidades.tibio })}
-                                        class={`flex-1 py-2 px-1 text-xs border rounded transition truncate ${intensidades.tibio ? 'border-blue-500/50 bg-blue-500/10 text-blue-400' : 'border-stone-800 text-stone-500'}`}
-                                    >
-                                        🌡️ Tibio
-                                    </button>
-                                    <button 
-                                        onClick={() => setIntensidades({ ...intensidades, caliente: !intensidades.caliente })}
-                                        class={`flex-1 py-2 px-1 text-xs border rounded transition truncate ${intensidades.caliente ? 'border-orange-500/50 bg-orange-500/10 text-orange-400' : 'border-stone-800 text-stone-500'}`}
-                                    >
-                                        🔥 Caliente
-                                    </button>
-                                    <button 
-                                        onClick={() => setIntensidades({ ...intensidades, llamas: !intensidades.llamas })}
-                                        class={`flex-1 py-2 px-1 text-xs border rounded transition truncate ${intensidades.llamas ? 'border-red-500/50 bg-red-500/10 text-red-400' : 'border-stone-800 text-stone-500'}`}
-                                    >
-                                        💥 Llamas
-                                    </button>
+                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded">
+                                <label class="text-xs font-royal tracking-widest text-amber-500 uppercase block mb-3 font-bold">Filtro de Intensidad Real</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    {['tibio', 'caliente', 'llamas'].map(lvl => (
+                                        <button 
+                                            key={lvl}
+                                            onClick={() => setIntensidad(lvl)}
+                                            class={`py-2 text-xs font-bold border rounded uppercase transition ${intensidad === lvl ? 'border-amber-500 bg-amber-500/10 text-amber-400' : 'border-stone-800 text-stone-500'}`}
+                                        >
+                                            {lvl === 'tibio' && '🌡️ Tibio'}
+                                            {lvl === 'caliente' && '🔥 Hot'}
+                                            {lvl === 'llamas' && '💥 Llamas'}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
 
                             <button 
-                                onClick={iniciarPartida}
+                                onClick={() => { setVista('juego'); obtenerPrendaAleatoria(); }}
                                 class="w-full bg-gradient-to-b from-amber-400 to-amber-600 text-stone-950 font-royal font-bold text-sm tracking-widest py-3 uppercase shadow"
-                                style={{ clipPath: 'polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%)' }}
                             >
-                                Inicializar Tablero
+                                Iniciar Servidor de Juego
                             </button>
                         </div>
                     )}
 
-                    {/* VISTA: PANEL DE JUEGO */}
-                    {vista === 'juego' && partida && (
-                        <div class="flex-1 flex flex-col justify-between py-2">
+                    {/* INTERFAZ DE GESTIÓN DE PRENDAS Y PUNTAJES ORIGINAL */}
+                    {vista === 'juego' && (
+                        <div class="space-y-6 flex-1 flex flex-col justify-between">
                             
-                            {/* Cabecera del Juego */}
-                            <div class="flex justify-between items-center border-b border-stone-800 pb-3 mb-4">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b border-stone-800 pb-2">
+                                    <span class="text-xs font-royal tracking-widest text-amber-500 font-bold uppercase">Prenda del Rey Vigente</span>
+                                    <span class="text-[10px] bg-stone-900 px-2 py-0.5 rounded border border-stone-800 font-mono uppercase text-stone-400">
+                                        Intensidad: {intensidad}
+                                    </span>
+                                </div>
+
+                                <div class="bg-stone-900 border border-amber-500/30 p-5 rounded shadow-inner text-center min-h-[100px] flex items-center justify-center">
+                                    <p class="text-stone-200 text-sm font-serif italic leading-relaxed">
+                                        "{prendaActual?.texto}"
+                                    </p>
+                                </div>
+
                                 <button 
-                                    onClick={() => setMostrarReglas(true)}
-                                    class="text-xs font-royal tracking-wider text-amber-500/70 border border-stone-800 px-2.5 py-1 hover:border-stone-600"
+                                    onClick={obtenerPrendaAleatoria}
+                                    class="w-full bg-stone-900 border border-stone-700 text-amber-400 font-royal text-xs tracking-widest py-2.5 uppercase hover:border-stone-500"
                                 >
-                                    REGLAS
-                                </button>
-                                <div class="text-center">
-                                    <span class="text-[10px] font-royal tracking-[0.3em] text-stone-500 block uppercase">Ronda</span>
-                                    <span class="font-royal text-2xl font-black text-amber-400">{partida.ronda} <span class="text-xs text-stone-600">/ {partida.totalRondas}</span></span>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-[10px] font-royal tracking-widest text-stone-500 block uppercase">Mazo Real</span>
-                                    <span class="text-xs text-stone-300 font-mono font-bold">{partida.poolPrendas.length} u.</span>
-                                </div>
-                            </div>
-
-                            {/* CONTENIDO FLUIDO SEGÚN FASE */}
-                            <div class="flex-1 flex flex-col justify-center">
-                                
-                                {/* FASE 1: SELECCIONAR REY */}
-                                {partida.fase === 'seleccion_rey' && (
-                                    <div class="text-center animate-fadeIn">
-                                        <div class="text-4xl mb-2 text-amber-500/80">👑</div>
-                                        <h3 class="font-royal text-lg text-amber-200 tracking-wide mb-6">¿Quién se adjudica la Corona esta ronda?</h3>
-                                        <div class="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto p-1">
-                                            {partida.equipos.map(eq => (
-                                                <button 
-                                                    key={eq.id}
-                                                    onClick={() => {
-                                                        const randomIdx = Math.floor(Math.random() * partida.poolPrendas.length);
-                                                        const prendaSeleccionada = partida.poolPrendas[randomIdx] || { id: 'fb', texto: 'El Rey dicta un castigo libre a los plebeyos seleccionados.', nivel: 'tibio' };
-                                                        setPartida({
-                                                            ...partida,
-                                                            reyActual: eq.id,
-                                                            prendaActual: prendaSeleccionada,
-                                                            fase: 'lanzar_prenda',
-                                                            equiposSeleccionados: [],
-                                                            votos: {}
-                                                        });
-                                                    }}
-                                                    class={`p-3 text-sm font-medium border rounded text-center transition hover:brightness-110 active:scale-98 border-l-4 ${eq.colorClass}`}
-                                                >
-                                                    {eq.nombre}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* FASE 2: LANZAR PRENDA */}
-                                {partida.fase === 'lanzar_prenda' && (
-                                    <div class="space-y-4 animate-fadeIn">
-                                        <div class="text-center bg-stone-900/40 border border-stone-800/80 p-3 rounded">
-                                            <span class="text-[10px] font-royal tracking-widest text-amber-500 uppercase block mb-0.5">Su Majestad Vigente</span>
-                                            <span class="text-base font-royal font-bold text-stone-100">{partida.equipos.find(e => e.id === partida.reyActual)?.nombre}</span>
-                                        </div>
-
-                                        <div class="bg-stone-900 border border-amber-500/30 p-5 rounded relative shadow-inner">
-                                            <div class="absolute -top-2.5 left-4 px-2 text-[9px] font-mono tracking-widest uppercase rounded bg-stone-950 text-amber-400 border border-amber-500/30">
-                                                {partida.prendaActual.nivel === 'tibio' && '🌡️ Nivel Tibio'}
-                                                {partida.prendaActual.nivel === 'caliente' && '🔥 Nivel Caliente'}
-                                                {partida.prendaActual.nivel === 'llamas' && '💥 En Llamas'}
-                                            </div>
-                                            <p class="text-stone-200 text-sm leading-relaxed italic font-serif pt-1">
-                                                "{partida.prendaActual.texto}"
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <label class="text-[10px] font-royal tracking-widest text-stone-500 block mb-2 uppercase">Seleccionar Plebeyos Obligados</label>
-                                            <div class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-0.5">
-                                                {partida.equipos.map(eq => {
-                                                    const esRey = eq.id === partida.reyActual;
-                                                    const estaMarcado = partida.equiposSeleccionados.includes(eq.id);
-                                                    return (
-                                                        <button 
-                                                            key={eq.id}
-                                                            disabled={esRey}
-                                                            onClick={() => {
-                                                                if (estaMarcado) {
-                                                                    setPartida({ ...partida, equiposSeleccionados: partida.equiposSeleccionados.filter(id => id !== eq.id) });
-                                                                } else {
-                                                                    setPartida({ ...partida, equiposSeleccionados: [...partida.equiposSeleccionados, eq.id] });
-                                                                }
-                                                            }}
-                                                            class={`p-2.5 text-xs font-medium border rounded transition border-l-4 ${esRey ? 'opacity-40 border-stone-800 text-stone-600 bg-transparent cursor-not-allowed' : estaMarcado ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-semibold' : 'border-stone-800 text-stone-400 bg-stone-900/30 hover:border-stone-700'}`}
-                                                        >
-                                                            {eq.nombre} {esRey && '(Rey)'}
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-
-                                        <button 
-                                            disabled={partida.equiposSeleccionados.length === 0}
-                                            onClick={() => {
-                                                const votosIniciales = {};
-                                                partida.equiposSeleccionados.forEach(id => {
-                                                    votosIniciales[id] = true; // Por defecto cumple
-                                                });
-                                                setPartida({ ...partida, fase: 'votacion', votos: votosIniciales });
-                                            }}
-                                            class="w-full bg-stone-100 text-stone-950 font-royal font-bold text-xs tracking-widest py-3 uppercase disabled:opacity-30 disabled:cursor-not-allowed"
-                                            style={{ clipPath: 'polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%)' }}
-                                        >
-                                            Pasar al Veredicto
-                                        </button>
-                                    </div>
-                                )}
-
-                                {/* FASE 3: VOTACIÓN / VEREDICTO */}
-                                {partida.fase === 'votacion' && (
-                                    <div class="space-y-4 animate-fadeIn">
-                                        <h3 class="font-royal text-center text-sm text-amber-400 tracking-wider mb-2 uppercase">Evaluación del Cumplimiento</h3>
-                                        
-                                        <div class="space-y-2 max-h-72 overflow-y-auto p-1">
-                                            {partida.equiposSeleccionados.map(id => {
-                                                const eq = partida.equipos.find(e => e.id === id);
-                                                const voto = partida.votos[id];
-                                                return (
-                                                    <div key={id} class="flex items-center justify-between p-3 bg-stone-900/80 border border-stone-800 rounded">
-                                                        <span class="text-sm font-medium text-stone-200 truncate pr-2">{eq.nombre}</span>
-                                                        <div class="flex space-x-1 flex-shrink-0">
-                                                            <button 
-                                                                onClick={() => setPartida({ ...partida, votos: { ...partida.votos, [id]: true } })}
-                                                                class={`px-3 py-1 text-xs font-bold rounded transition ${voto === true ? 'bg-emerald-600 text-white shadow' : 'bg-stone-950 border border-stone-800 text-stone-500'}`}
-                                                            >
-                                                                SÍ
-                                                            </button>
-                                                            <button 
-                                                                onClick={() => setPartida({ ...partida, votos: { ...partida.votos, [id]: false } })}
-                                                                class={`px-3 py-1 text-xs font-bold rounded transition ${voto === false ? 'bg-red-600 text-white shadow' : 'bg-stone-950 border border-stone-800 text-stone-500'}`}
-                                                            >
-                                                                NO
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-
-                                        <button 
-                                            onClick={() => {
-                                                // Computar puntos
-                                                const listaEquiposActualizada = partida.equipos.map(eq => {
-                                                    if (partida.votos[eq.id] === true) {
-                                                        return { ...eq, puntos: eq.puntos + 1 };
-                                                    }
-                                                    return eq;
-                                                });
-
-                                                const historialTxt = `"${partida.prendaActual.texto}" decretada por el equipo Rey: ${partida.equipos.find(e => e.id === partida.reyActual)?.nombre}.`;
-
-                                                if (partida.ronda >= partida.totalRondas) {
-                                                    setPartida({
-                                                        ...partida,
-                                                        equipos: listaEquiposActualizada,
-                                                        historialUltimaPrenda: historialTxt,
-                                                        fase: 'fin'
-                                                    });
-                                                } else {
-                                                    setPartida({
-                                                        ...partida,
-                                                        equipos: listaEquiposActualizada,
-                                                        ronda: partida.ronda + 1,
-                                                        fase: 'seleccion_rey',
-                                                        reyActual: null,
-                                                        prendaActual: null,
-                                                        equiposSeleccionados: [],
-                                                        votos: {},
-                                                        historialUltimaPrenda: historialTxt
-                                                    });
-                                                }
-                                            }}
-                                            class="w-full bg-gradient-to-b from-amber-400 to-amber-600 text-stone-950 font-royal font-bold text-xs tracking-widest py-3 uppercase"
-                                            style={{ clipPath: 'polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%)' }}
-                                        >
-                                            {partida.ronda >= partida.totalRondas ? 'Concluir Torneo' : 'Siguiente Ronda'}
-                                        </button>
-                                    </div>
-                                )}
-
-                                {/* FASE 4: FIN DE PARTIDA */}
-                                {partida.fase === 'fin' && (
-                                    <div class="text-center space-y-4 animate-fadeIn">
-                                        <div class="text-5xl">🏆</div>
-                                        <h2 class="font-royal text-2xl text-amber-400 font-bold tracking-wider">Término del Juego</h2>
-                                        
-                                        {(() => {
-                                            const maxPuntos = Math.max(...partida.equipos.map(e => e.puntos));
-                                            const ganadores = partida.equipos.filter(e => e.puntos === maxPuntos);
-                                            return (
-                                                <div class="bg-amber-950/20 border border-amber-500/30 p-4 rounded max-w-xs mx-auto">
-                                                    <span class="text-[10px] font-royal tracking-widest text-amber-500 uppercase block mb-1">Victoria Absoluta</span>
-                                                    <div class="font-royal text-xl font-black text-stone-100 uppercase truncate">
-                                                        {ganadores.map(g => g.nombre).join(' & ')}
-                                                    </div>
-                                                    <div class="text-xs text-amber-400 font-mono mt-1 font-bold">{maxPuntos} Puntos Acumulados</div>
-                                                </div>
-                                            );
-                                        })()}
-
-                                        <div class="bg-stone-900/60 border border-stone-800 p-3 rounded text-left max-h-40 overflow-y-auto">
-                                            <span class="text-[10px] font-royal tracking-widest text-stone-500 block mb-2 uppercase text-center">Tabla de Clasificación</span>
-                                            {[...partida.equipos].sort((a, b) => b.puntos - a.puntos).map((eq, i) => (
-                                                <div key={eq.id} class="flex justify-between items-center py-1 border-b border-stone-800 last:border-0 text-xs">
-                                                    <span class="text-stone-300 font-medium truncate max-w-[240px]">#{i+1} {eq.nombre}</span>
-                                                    <span class="font-mono font-bold text-amber-400">{eq.puntos} Pts</span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {partida.historialUltimaPrenda && (
-                                            <div class="bg-stone-900/30 border border-stone-800/60 p-3 rounded text-left">
-                                                <span class="text-[9px] font-royal tracking-widest text-stone-500 block mb-1 uppercase">Último Edicto Real de la Partida</span>
-                                                <p class="text-stone-400 text-xs italic leading-normal">
-                                                    {partida.historialUltimaPrenda}
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        <button 
-                                            onClick={reiniciarJuegoCompleto}
-                                            class="w-full bg-stone-900 border border-stone-700 text-stone-300 font-royal font-bold text-xs tracking-widest py-3 uppercase hover:border-stone-500"
-                                            style={{ clipPath: 'polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%)' }}
-                                        >
-                                            Reiniciar Tablero
-                                        </button>
-                                    </div>
-                                )}
-
-                            </div>
-                        </div>
-                    )}
-
-                    {/* VISTA: MAZO / GESTIÓN DE PRENDAS */}
-                    {vista === 'mazo' && (
-                        <div class="flex-1 py-4 flex flex-col justify-between">
-                            <div>
-                                <h2 class="font-royal text-xl text-center text-amber-400 tracking-wider mb-4">Mazo del Servidor</h2>
-                                
-                                {mensajeExito && (
-                                    <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs p-2 text-center rounded mb-3">
-                                        {mensajeExito}
-                                    </div>
-                                )}
-
-                                {/* Editor / Creador */}
-                                <div class="bg-stone-900/60 border border-stone-800 p-3 rounded mb-4">
-                                    <label class="text-[10px] font-royal tracking-widest text-amber-500 block mb-2 uppercase">Añadir Nuevo Edicto Personalizado</label>
-                                    <textarea 
-                                        placeholder="Escribí acá el castigo o prenda corporativa..."
-                                        value={nuevaPrendaTexto}
-                                        onChange={(e) => setNuevaPrendaTexto(e.target.value)}
-                                        class="w-full h-16 bg-stone-950 border border-stone-800 rounded p-2 text-xs text-stone-200 placeholder-stone-700 focus:outline-none focus:border-amber-500 resize-none font-sans"
-                                    />
-                                    <div class="flex justify-between items-center mt-2">
-                                        <div class="flex space-x-1">
-                                            {['tibio', 'caliente', 'llamas'].map(lvl => (
-                                                <button 
-                                                    key={lvl}
-                                                    onClick={() => setNuevaPrendaNivel(lvl)}
-                                                    class={`px-2 py-1 text-[9px] font-bold border rounded uppercase ${nuevaPrendaNivel === lvl ? 'border-amber-500 bg-amber-500/10 text-amber-400' : 'border-stone-800 text-stone-600'}`}
-                                                >
-                                                    {lvl === 'tibio' && '🌡️'}
-                                                    {lvl === 'caliente' && '🔥'}
-                                                    {lvl === 'llamas' && '💥'} {lvl}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <button 
-                                            onClick={agregarPrendaCustom}
-                                            class="bg-amber-500 text-stone-950 px-3 py-1 text-xs font-bold rounded hover:bg-amber-400"
-                                        >
-                                            Guardar
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Listado de personalizadas */}
-                                <div class="space-y-1.5 max-h-60 overflow-y-auto pr-1">
-                                    <span class="text-[10px] font-royal tracking-widest text-stone-500 block mb-2 uppercase">Prendas Custom Activas ({prendasPersonalizadas.length})</span>
-                                    {prendasPersonalizadas.length === 0 ? (
-                                        <p class="text-xs text-stone-600 text-center italic py-4">No se ingresaron prendas personalizadas en este mazo local.</p>
-                                    ) : (
-                                        prendasPersonalizadas.map(p => (
-                                            <div key={p.id} class="p-2 bg-stone-900/40 border border-stone-800 rounded flex justify-between items-start space-x-2 text-xs">
-                                                <p class="text-stone-300 font-sans leading-relaxed flex-1">
-                                                    <span class="text-[9px] uppercase font-mono mr-1 text-amber-500 bg-amber-500/5 px-1 rounded border border-amber-500/10">{p.nivel}</span>
-                                                    {p.texto}
-                                                </p>
-                                                <button 
-                                                    onClick={() => eliminarPrendaCustom(p.id)}
-                                                    class="text-red-500/50 hover:text-red-400 px-1 font-bold text-sm leading-none"
-                                                >
-                                                    ×
-                                                </button>
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* VISTA: PUNTUACIÓN / MONITOR GENERAL */}
-                    {vista === 'puntuacion' && (
-                        <div class="flex-1 py-4">
-                            <h2 class="font-royal text-xl text-center text-amber-400 tracking-wider mb-6">Monitor de Puntuación</h2>
-                            
-                            <div class="space-y-2.5 max-h-[26rem] overflow-y-auto p-1">
-                                {partida ? (
-                                    partida.equipos.map(eq => (
-                                        <div key={eq.id} class={`p-4 border rounded flex items-center justify-between border-l-4 ${eq.colorClass}`}>
-                                            <div class="flex items-center space-x-2.5 truncate">
-                                                <div class={`w-2.5 h-2.5 rounded-full ${eq.dotClass}`}></div>
-                                                <span class="font-royal text-sm font-bold tracking-wide text-stone-100 truncate pr-2">{eq.nombre}</span>
-                                            </div>
-                                            <div class="text-right flex-shrink-0">
-                                                <span class="font-royal text-2xl font-black text-amber-400 font-mono">{eq.puntos}</span>
-                                                <span class="text-[9px] text-stone-500 tracking-widest font-mono uppercase ml-1">Pts</span>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div class="text-center py-12">
-                                        <div class="text-3xl opacity-20 mb-2">📊</div>
-                                        <p class="text-xs text-stone-600 italic">No hay ninguna partida activa inicializada en el servidor corporativo.</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {partida && (
-                                <button 
-                                    onClick={reiniciarJuegoCompleto}
-                                    class="w-full mt-6 bg-transparent border border-red-900/50 text-red-400/70 font-royal font-bold text-xs tracking-widest py-2.5 uppercase hover:bg-red-950/20 hover:text-red-400"
-                                >
-                                    Terminar Sesión Forzadamente
-                                </button>
-                            )}
-                        </div>
-                    )}
-
-                    {/* BARRA DE NAVEGACIÓN FIJA INFERIOR */}
-                    <div class="fixed bottom-0 left-0 right-0 bg-stone-950 border-t border-stone-900 py-2.5 z-40">
-                        <div class="max-w-md mx-auto px-4 flex justify-around space-x-1">
-                            <button 
-                                onClick={() => setVista(partida ? 'juego' : 'inicio')}
-                                class={`flex-1 py-2 rounded text-center transition flex flex-col items-center justify-center ${vista === 'inicio' || vista === 'configuracion' || vista === 'juego' ? 'bg-stone-900 border border-amber-500/30 text-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
-                            >
-                                <span class="text-base mb-0.5">🎴</span>
-                                <span class="text-[9px] font-royal tracking-wider uppercase font-bold">Juego</span>
-                            </button>
-                            <button 
-                                onClick={() => setVista('mazo')}
-                                class={`flex-1 py-2 rounded text-center transition flex flex-col items-center justify-center ${vista === 'mazo' ? 'bg-stone-900 border border-amber-500/30 text-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
-                            >
-                                <span class="text-base mb-0.5">📜</span>
-                                <span class="text-[9px] font-royal tracking-wider uppercase font-bold">Mazo</span>
-                            </button>
-                            <button 
-                                onClick={() => setVista('puntuacion')}
-                                class={`flex-1 py-2 rounded text-center transition flex flex-col items-center justify-center ${vista === 'puntuacion' ? 'bg-stone-900 border border-amber-500/30 text-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
-                            >
-                                <span class="text-base mb-0.5">📊</span>
-                                <span class="text-[9px] font-royal tracking-wider uppercase font-bold">Puntos</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* MODAL: REGLAS DEL JUEGO */}
-                    {mostrarReglas && (
-                        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-                            <div class="bg-stone-900 border border-amber-500/40 p-5 rounded max-w-xs w-full shadow-2xl relative">
-                                <h3 class="font-royal text-amber-400 text-center font-bold text-sm tracking-widest mb-3 uppercase">Leyes de la Corona</h3>
-                                <div class="text-xs text-stone-300 space-y-2.5 leading-relaxed font-sans max-h-64 overflow-y-auto pr-1">
-                                    <p>1. Un equipo asume de forma voluntaria el rol de <strong class="text-amber-400">Rey o Reyna</strong> para la ronda en curso.</p>
-                                    <p>2. El sistema despliega de forma automatizada un edicto real secreto basado en los niveles de intensidad activos.</p>
-                                    <p>3. El Rey determina cuáles de los demás equipos (plebeyos) están obligados a ejecutar el reto impuesto.</p>
-                                    <p>4. Una vez concluida la acción, se realiza el escrutinio. Cada plebeyo que haya cumplido de manera satisfactoria (marcado con <strong>SÍ</strong>) sumará un punto en el monitor general.</p>
-                                </div>
-                                <button 
-                                    onClick={() => setMostrarReglas(false)}
-                                    class="w-full mt-4 bg-amber-500 text-stone-950 font-royal font-bold text-xs tracking-widest py-2 uppercase rounded hover:bg-amber-400"
-                                >
-                                    Entendido
+                                    Siguiente Prenda Aleatoria 🎲
                                 </button>
                             </div>
+
+                            <div class="bg-stone-900/60 border border-stone-800 p-4 rounded space-y-3">
+                                <label class="text-xs font-royal tracking-widest text-stone-400 uppercase block border-b border-stone-800 pb-1 font-bold text-center">
+                                    Control General de Puntos
+                                </label>
+                                <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                                    {equipos.map(eq => (
+                                        <div key={eq.id} class="flex items-center justify-between p-2.5 bg-stone-950 border border-stone-800 rounded">
+                                            <div class="truncate pr-2">
+                                                <div class="text-xs font-bold text-stone-100 truncate">{eq.nombre || 'Sin nombre'}</div>
+                                                <div class="text-[10px] text-stone-500 truncate">{eq.integrantes || 'Sin integrantes'}</div>
+                                            </div>
+                                            <div class="flex items-center space-x-3 flex-shrink-0">
+                                                <button onClick={() => modificarPuntos(eq.id, -1)} class="w-6 h-6 border border-stone-800 text-stone-400 flex items-center justify-center text-xs font-bold bg-stone-900 rounded">-</button>
+                                                <span class="font-mono text-sm font-bold text-amber-400 w-6 text-center">{eq.puntos}</span>
+                                                <button onClick={() => modificarPuntos(eq.id, 1)} class="w-6 h-6 border border-stone-800 text-stone-400 flex items-center justify-center text-xs font-bold bg-stone-900 rounded">+</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <button 
+                                onClick={() => setVista('configuracion')}
+                                class="w-full bg-stone-950 border border-stone-800 text-stone-500 font-royal text-xs tracking-widest py-2 uppercase hover:text-stone-400"
+                            >
+                                Volver a Configuración / Reset
+                            </button>
                         </div>
                     )}
 
@@ -710,7 +256,7 @@
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<JuegoReyManda />);
+        root.render(<App />);
     </script>
 </body>
 </html>
