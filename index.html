@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,11 +6,6 @@
     <title>El Rey Manda ♛</title>
     <!-- Tailwind CSS para diseño profesional -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React y ReactDOM para la lógica del juego móvil -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <!-- Babel para compilar React en el navegador -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -40,13 +34,13 @@
 </head>
 <body class="bg-negro text-blanco font-principal relative min-h-screen overflow-x-hidden">
 
-    <!-- Fondo desenfocado unificado -->
+    <!-- Fondo unificado en un solo plano -->
     <div class="fixed inset-0 z-0">
         <div class="absolute inset-0 bg-black/70 z-10"></div>
         <img src="fondo.jpg" alt="Fondo" class="w-full h-full object-cover opacity-25 blur-[10px]">
     </div>
 
-    <!-- Contenedor de la Landing Page -->
+    <!-- SECCIÓN 1: LANDING PAGE -->
     <div id="landing-section" class="relative z-10 max-w-[600px] mx-auto px-5 py-6 block">
         <div class="bg-rojoaviso text-blanco text-center py-3 px-4 rounded-md font-bold mb-8 tracking-wide">
             ⚠️ SOLO PARA MAYORES DE 18 AÑOS ⚠️
@@ -75,7 +69,7 @@
 
             <div class="bg-negrosuave/90 p-5 rounded-lg border-l-[3px] border-dorado shadow-lg">
                 <h3 class="text-dorado font-bold text-[1.2em] mb-3">📲 Acceso al Juego</h3>
-                <button onclick="abrirJuego()" class="w-full block bg-gradient-to-br from-dorado to-doradooscuro text-negro text-center py-4 px-5 rounded-lg font-bold text-[1.15em] transition-all duration-300 hover:-translate-y-[2px] hover:shadow-[0_0_15px_rgba(255,215,0,0.4)] shadow-[0_0_10px_rgba(255,215,0,0.3)] tracking-wide uppercase">
+                <button onclick="iniciarAppJuego()" class="w-full block bg-gradient-to-br from-dorado to-doradooscuro text-negro text-center py-4 px-5 rounded-lg font-bold text-[1.15em] transition-all duration-300 hover:-translate-y-[2px] hover:shadow-[0_0_15px_rgba(255,215,0,0.4)] shadow-[0_0_10px_rgba(255,215,0,0.3)] tracking-wide uppercase">
                     ▶️ INICIAR APLICACIÓN OFICIAL
                 </button>
                 <div class="text-[1.35em] font-bold text-dorado text-center my-4 tracking-[1px] texto-sombra">📞 +54 9 3547 32-7056</div>
@@ -88,10 +82,99 @@
         </footer>
     </div>
 
-    <!-- Contenedor donde React va a renderizar el juego móvil -->
-    <div id="root" class="relative z-20 hidden"></div>
+    <!-- SECCIÓN 2: APLICACIÓN DE JUEGO (Oculta al principio) -->
+    <div id="juego-section" class="relative z-20 max-w-[500px] mx-auto px-4 py-6 hidden">
+        <div id="pantalla-activacion" class="hidden space-y-4">
+            <h2 class="text-2xl font-bold text-dorado text-center uppercase tracking-wide">ACTIVACIÓN REQUERIDA</h2>
+            <div class="bg-neutral-900 border border-dorado/20 rounded-lg p-5 space-y-4">
+                <div>
+                    <label class="block text-xs text-dorado mb-1 uppercase">Tu Nombre</label>
+                    <input type="text" id="act-user" class="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white outline-none focus:border-dorado">
+                </div>
+                <div>
+                    <label class="block text-xs text-dorado mb-1 uppercase">Código de Activación</label>
+                    <input type="text" id="act-codigo" class="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white font-mono uppercase text-center tracking-widest focus:border-dorado" placeholder="REY-XXXX">
+                </div>
+                <p id="act-error" class="text-sm text-red-400 hidden"></p>
+                <button onclick="verificarLicencia()" id="btn-activar" class="w-full bg-dorado text-negro font-bold py-2.5 rounded transition-opacity hover:opacity-90 uppercase">
+                    ACTIVAR LICENCIA
+                </button>
+            </div>
+        </div>
 
-    <!-- Pop-up inicial de bienvenida comercial -->
+        <div id="pantalla-menu" class="hidden text-center py-10 space-y-6">
+            <span class="text-5xl block animate-bounce">♛</span>
+            <h1 class="text-4xl font-extrabold tracking-wider text-dorado">EL REY MANDA</h1>
+            <p class="text-sm text-gray-400">Consolas locales activas</p>
+            <button onclick="irAConfiguracion()" class="bg-dorado text-negro font-bold py-3 px-8 rounded-md tracking-wider uppercase transform hover:scale-105 transition-transform">
+                Jugar Rondas
+              </button>
+        </div>
+
+        <div id="pantalla-config" class="hidden space-y-4">
+            <h2 class="text-xl text-dorado font-bold text-center">Configurar Jugadores</h2>
+            <div class="bg-neutral-900 border border-neutral-800 rounded-lg p-4 space-y-4">
+                <div>
+                    <label class="block text-sm text-neutral-400 mb-2">Cantidad: <span id="val-cantidad" class="text-dorado font-bold">4</span></label>
+                    <input type="range" id="cant-jugadores" min="4" max="12" value="4" oninput="actualizarInputsJugadores()" class="w-full accent-dorado">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs text-neutral-400">Nombres de los Plebeyos</label>
+                    <div id="contenedor-nombres" class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+            <button onclick="empezarPartida()" class="w-full bg-dorado text-negro font-bold py-3 rounded-lg uppercase">
+                Iniciar Partida →
+            </button>
+        </div>
+
+        <div id="pantalla-ronda" class="hidden space-y-6">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
+                <span id="info-ronda" class="text-xs text-dorado font-bold">RONDA 1 / 20</span>
+                <span class="text-sm">👑 Modo Activo</span>
+            </div>
+
+            <!-- Subfase 1: Elegir Rey -->
+            <div id="subfase-elegir-rey" class="space-y-4 text-center">
+                <h3 class="text-lg text-dorado">¿Quién sacó la corona del Rey?</h3>
+                <div id="lista-reyes" class="grid grid-cols-2 gap-2"></div>
+            </div>
+
+            <!-- Subfase 2: Mostrar Consigna -->
+            <div id="subfase-consigna" class="hidden space-y-4 text-center">
+                <div class="bg-dorado/10 border border-dorado/20 rounded-xl p-5">
+                    <h4 id="titulo-consigna" class="text-xs text-dorado tracking-widest uppercase mb-1">Orden del Rey</h4>
+                    <p id="texto-consigna" class="text-lg italic font-serif leading-relaxed px-2"></p>
+                </div>
+                <div class="text-left space-y-2">
+                    <label class="text-xs text-neutral-400">Seleccioná los plebeyos obligados a cumplir:</label>
+                    <div id="lista-afectados" class="grid grid-cols-2 gap-2"></div>
+                </div>
+                <button onclick="irAVeredicto()" id="btn-ir-veredicto" class="w-full bg-dorado text-negro font-bold py-2.5 rounded-lg text-sm uppercase opacity-50" disabled>
+                    Evaluar cumplimiento
+                </button>
+            </div>
+
+            <!-- Subfase 3: Veredicto -->
+            <div id="subfase-veredicto" class="hidden space-y-4">
+                <h3 class="text-md text-center text-dorado">¿Cumplieron la orden de Su Majestad?</h3>
+                <div id="lista-veredictos" class="space-y-2"></div>
+                <button onclick="guardarRonda()" class="w-full bg-dorado text-negro font-bold py-2.5 rounded-lg text-sm uppercase mt-4">
+                    Siguiente Ronda →
+                </button>
+            </div>
+        </div>
+
+        <div id="pantalla-final" class="hidden flex flex-col justify-center items-center p-6 text-center space-y-4">
+            <h1 class="text-2xl font-black text-dorado">FIN DE LAS PRENDAS</h1>
+            <p class="text-sm text-neutral-400">Mazo completado con éxito.</p>
+            <button onclick="window.location.reload()" class="bg-neutral-900 border border-dorado text-dorado py-2 px-4 rounded text-sm">
+                REINICIAR COMPLETAMENTE
+            </button>
+        </div>
+    </div>
+
+    <!-- Pop-up inicial comercial -->
     <div id="popup1" class="fixed top-1/3 left-1/2 -translate-x-1/2 z-50 bg-negro/95 border border-dorado/30 rounded-lg p-6 shadow-[0_0_25px_rgba(255,215,0,0.2)] desenfoque transition-all duration-500 opacity-0 translate-y-10 pointer-events-none max-w-[90%] w-[450px]">
         <div class="text-center">
             <div class="text-[2.5em] text-dorado mb-3">♛</div>
@@ -102,8 +185,34 @@
         </div>
     </div>
 
+    <!-- LÓGICA DE JUEGO PURA EN JAVASCRIPT NATIVO -->
     <script>
-        // Manejo de la transición entre la landing y la app interactiva
+        const PRENDAS = [
+            "Los/las participantes seleccionados deberán mirarse durante 20 segundos, hacerse caras y gestos sensuales sin reírse. Si alguno/a se ríe, pasa el turno.",
+            "Los/las participantes elegidos deberán masajear suavemente los hombros o espalda del número elegido por el Rey/Reyna.",
+            "Los/las participantes seleccionados deberán desfilar lenta y sensualmente como en una pasarela delante del Rey/Reyna.",
+            "Los participantes elegidos deberán adivinar el color de la ropa interior del Rey/Reyna. Quien adivine suma punto extra.",
+            "Los números elegidos deberán hacer un mini baile mirando al Rey/Reyna durante 1 minuto.",
+            "Los números que el Rey/Reyna elija deberán quitar 2 prendas de vestir en total a otra persona designada por el Rey/Reyna utilizando solamente una mano.",
+            "Los/las participantes elegidos/as deberán hacer un baile tipo striptease dedicado al Rey/Reyna hasta quedar en ropa interior.",
+            "El Rey/Reyna elegirá y definirá las parejas de números que deberán besarse y tocarse de forma apasionada durante 20 segundos.",
+            "Las personas elegidas deberán pasar una por una y darle un beso seco al Rey/Reyna en la zona que Su Majestad ordene."
+        ];
+
+        const SB_URL = 'https://nepnpommpvpzeqtsxfru.supabase.co';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lcG5wb21tcHZwemVxdHN4ZnJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MzY5MTUsImV4cCI6MjA5NDUxMjkxNX0.ngZjx0kvnp-7tBA0kFu6_CoYbIjWpGviINWD8fCDVNQ';
+
+        let estado = {
+            activado: !!localStorage.getItem('rm_activacion'),
+            rondaActual: 1,
+            totalRondas: 20,
+            jugadores: [],
+            reyId: null,
+            prendaActual: "",
+            elegidos: [],
+            veredictos: {}
+        };
+
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const popup = document.getElementById('popup1');
@@ -113,269 +222,200 @@
                     setTimeout(() => {
                         popup.classList.remove('opacity-100', 'translate-y-0');
                         popup.classList.add('opacity-0', 'translate-y-10');
-                    }, 4000);
+                    }, 3500);
                 }
-            }, 800);
+            }, 500);
         });
 
-        function abrirJuego() {
+        function iniciarAppJuego() {
             document.getElementById('landing-section').classList.add('hidden');
-            document.getElementById('root').classList.remove('hidden');
-        }
-    </script>
-
-    <!-- Lógica del Juego en React -->
-    <script type="text/babel">
-        const { useState } = React;
-        const INIT = {
-          tibio: [
-            { id: 't1', txt: 'Los/las participantes seleccionados deberán mirarse durante 20 segundos, hacerse caras y gestos sensuales sin reírse. Si alguno/a se ríe, pasa el turno.' },
-            { id: 't2', txt: 'Los/las participantes elegidos deberán masajear suavemente los hombros o espalda del número elegido por el Rey/Reyna.' },
-            { id: 't3', txt: 'Los/las participantes seleccionados deberán desfilar lenta y sensualmente como en una pasarela delante del Rey/Reyna.' },
-            { id: 't4', txt: 'Los participantes elegidos deberán adivinar el color de la ropa interior del Rey/Reyna. Quien adivine suma punto extra.' },
-            { id: 't5', txt: 'Los números elegidos deberán hacer un mini baile mirando al Rey/Reyna durante 1 minuto.' }
-          ],
-          caliente: [
-            { id: 'c1', txt: 'Tiempo 2 minutos. Los números que el Rey/Reyna elija deberán quitar 2 prendas de vestir en total a otra persona designada por el Rey/Reyna utilizando solamente una mano.' },
-            { id: 'c2', txt: 'Los/las participantes elegidos/as deberán hacer un baile tipo striptease dedicado al Rey/Reyna hasta quedar en ropa interior.' }
-          ],
-          llamas: [
-            { id: 'l1', txt: 'El Rey/Reyna elegirá y definirá las parejas de números que deberán besarse y tocarse de forma apasionada durante 20 segundos.' },
-            { id: 'l2', txt: 'Las personas elegidas deberán pasar una por una y darle un beso seco al Rey/Reyna en la zona que Su Majestad ordene.' }
-          ]
-        };
-
-        const SB_URL = 'https://nepnpommpvpzeqtsxfru.supabase.co';
-        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lcG5wb21tcHZwemVxdHN4ZnJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MzY5MTUsImV4cCI6MjA5NDUxMjkxNX0.ngZjx0kvnp-7tBA0kFu6_CoYbIjWpGviINWD8fCDVNQ';
-
-        function App() {
-          const [activado, setActivado] = useState(() => !!localStorage.getItem('rm_activacion'));
-          const [actUser, setActUser] = useState('');
-          const [actCodigo, setActCodigo] = useState('');
-          const [actCargando, setActCargando] = useState(false);
-          const [actError, setActError] = useState('');
-
-          const [pant, setPant] = useState('splash');
-          const [numJug, setNumJug] = useState(4);
-          const [totR, setTotR] = useState(20);
-          const [nombres, setNombres] = useState(Array(20).fill(''));
-          const [jugs, setJugs] = useState([]);
-          const [scores, setScores] = useState({});
-          const [ronda, setRonda] = useState(1);
-          const [fase, setFase] = useState('rey-quien');
-          const [reyId, setReyId] = useState(null);
-          const [prenda, setPrenda] = useState(null);
-          const [eleg, setEleg] = useState([]);
-          const [vered, setVered] = useState({});
-
-          async function activarLicencia() {
-            if (!actUser.trim() || !actCodigo.trim()) { setActError('Completá todos los campos.'); return; }
-            setActCargando(true);
-            try {
-              const r = await fetch(`${SB_URL}/rest/v1/licencias?codigo=eq.${actCodigo.trim().toUpperCase()}&select=*`, {
-                headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
-              });
-              const data = await r.json();
-              if (data && data.length > 0 && data[0].activo) {
-                localStorage.setItem('rm_activacion', JSON.stringify({ nombre: actUser.trim(), codigo: actCodigo.toUpperCase() }));
-                setActivado(true);
-              } else {
-                setActError('Código inválido o inactivo.');
-              }
-            } catch (e) {
-              setActError('Error de conexión.');
-            }
-            setActCargando(false);
-          }
-
-          function iniciarPartida() {
-            const js = [];
-            for (let i = 0; i < numJug; i++) {
-              js.push({ id: i, nombre: nombres[i].trim() || `Jugador ${i + 1}` });
-            }
-            setJugs(js);
-            const sc = {}; js.forEach(j => { sc[j.id] = 0; });
-            setScores(sc);
-            setRonda(1);
-            setPant('juego');
-            setFase('rey-quien');
-          }
-
-          function obtenerPrendaAleatoria() {
-            const niveles = ['tibio', 'caliente', 'llamas'];
-            const nvl = niveles[Math.floor(Math.random() * niveles.length)];
-            const lista = INIT[nvl];
-            return lista[Math.floor(Math.random() * lista.length)];
-          }
-
-          function asignarRey(id) {
-            setReyId(id);
-            setPrenda(obtenerPrendaAleatoria());
-            setFase('consigna');
-          }
-
-          function procesarVeredicto() {
-            const nuevosPuntos = { ...scores };
-            Object.entries(vered).forEach(([id, cumplio]) => {
-              if (cumplio) nuevosPuntos[id] = (nuevosPuntos[id] || 0) + 1;
-            });
-            setScores(nuevosPuntos);
-            if (ronda >= totR) {
-              setPant('ganador');
+            document.getElementById('juego-section').classList.remove('hidden');
+            ocultarPantallas();
+            
+            if (estado.activado) {
+                document.getElementById('pantalla-menu').classList.remove('hidden');
             } else {
-              setRonda(r => r + 1);
-              setFase('rey-quien');
-              setEleg([]);
-              setVered({});
+                document.getElementById('pantalla-activacion').classList.remove('hidden');
             }
-          }
-
-          if (!activado) {
-            return (
-              <div class="flex flex-col justify-center items-center min-h-screen bg-neutral-950/95 p-6 text-center">
-                <h2 class="text-2xl font-bold text-dorado mb-4">ACTIVACIÓN REQUERIDA</h2>
-                <div class="w-full max-w-sm bg-neutral-900 border border-dorado/20 rounded-lg p-5 text-left space-y-4">
-                  <div>
-                    <label class="block text-xs text-dorado mb-1 uppercase">Tu Nombre</label>
-                    <input type="text" class="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white outline-none" value={actUser} onChange={e => setActUser(e.target.value)} />
-                  </div>
-                  <div>
-                    <label class="block text-xs text-dorado mb-1 uppercase">Código de Activación</label>
-                    <input type="text" class="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-white font-mono uppercase text-center" placeholder="REY-XXXX" value={actCodigo} onChange={e => setActCodigo(e.target.value)} />
-                  </div>
-                  {actError && <p class="text-sm text-red-400">{actError}</p>}
-                  <button class="w-full bg-dorado text-negro font-bold py-2.5 rounded transition-opacity" onClick={activarLicencia} disabled={actCargando}>
-                    {actCargando ? 'VERIFICANDO...' : 'ACTIVAR LICENCIA'}
-                  </button>
-                </div>
-              </div>
-            );
-          }
-
-          if (pant === 'splash') {
-            return (
-              <div class="min-h-screen flex flex-col justify-center items-center bg-neutral-950/90 text-center p-6">
-                <span class="text-5xl mb-2">♛</span>
-                <h1 class="text-4xl font-extrabold tracking-wider text-dorado">EL REY MANDA</h1>
-                <p class="text-sm text-gray-400 mt-1">Consolas locales activas</p>
-                <button class="mt-8 bg-dorado text-negro font-bold py-3 px-8 rounded-md tracking-wider uppercase" onClick={() => setPant('setup')}>
-                  Jugar Rondas
-                </button>
-              </div>
-            );
-          }
-
-          if (pant === 'setup') {
-            return (
-              <div class="min-h-screen bg-neutral-950/95 p-6 flex flex-col items-center justify-center">
-                <div class="w-full max-w-md space-y-4">
-                  <h2 class="text-xl text-dorado font-bold text-center">Configurar Jugadores</h2>
-                  <div class="bg-neutral-900 border border-neutral-800 rounded-lg p-4 space-y-4">
-                    <div>
-                      <label class="block text-sm text-neutral-400 mb-1">Cantidad: <span class="text-dorado font-bold">{numJug}</span></label>
-                      <input type="range" min="4" max="12" class="w-full accent-dorado" value={numJug} onChange={e => setNumJug(parseInt(e.target.value))} />
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1">
-                      {Array.from({ length: numJug }).map((_, i) => (
-                        <input key={i} type="text" class="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm text-white" placeholder={`Jugador ${i + 1}`} value={nombres[i] || ''} onChange={e => {
-                          const next = [...nombres]; next[i] = e.target.value; setNombres(next);
-                        }} />
-                      ))}
-                    </div>
-                  </div>
-                  <button class="w-full bg-dorado text-negro font-bold py-3 rounded-lg uppercase" onClick={iniciarPartida}>
-                    Iniciar Partida →
-                  </button>
-                </div>
-              </div>
-            );
-          }
-
-          if (pant === 'juego') {
-            return (
-              <div class="min-h-screen bg-neutral-950/95 p-4 text-white flex flex-col justify-between">
-                <div class="max-w-md mx-auto w-full">
-                  <div class="flex justify-between items-center border-b border-neutral-800 pb-2 mb-4">
-                    <span class="text-xs text-dorado font-bold">RONDA {ronda} / {totR}</span>
-                    <span class="text-sm">👑 Modo Activo</span>
-                  </div>
-
-                  {fase === 'rey-quien' && (
-                    <div class="text-center space-y-4">
-                      <h3 class="text-lg text-dorado">¿Quién sacó la corona del Rey?</h3>
-                      <div class="grid grid-cols-2 gap-2">
-                        {jugs.map(j => (
-                          <button key={j.id} class="bg-neutral-900 border border-neutral-800 p-3 rounded-lg font-medium hover:border-dorado" onClick={() => asignarRey(j.id)}>
-                            {j.nombre}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {fase === 'consigna' && (
-                    <div class="space-y-4 text-center">
-                      <div class="bg-dorado/10 border border-dorado/20 rounded-xl p-5">
-                        <h4 class="text-xs text-dorado tracking-widest uppercase mb-1">Orden de Su Majestad</h4>
-                        <p class="text-lg italic font-serif leading-relaxed">"{prenda?.txt}"</p>
-                      </div>
-                      <div class="text-left space-y-2">
-                        <label class="text-xs text-neutral-400">Seleccioná los plebeyos obligados a cumplir:</label>
-                        <div class="grid grid-cols-2 gap-2">
-                          {jugs.filter(j => j.id !== reyId).map(j => (
-                            <button key={j.id} class={`p-2 rounded border text-xs ${eleg.includes(j.id) ? 'bg-dorado border-dorado text-negro font-bold' : 'bg-neutral-900 border-neutral-800'}`} onClick={() => {
-                              setEleg(p => p.includes(j.id) ? p.filter(x => x !== j.id) : [...p, j.id]);
-                            }}>
-                              {j.nombre}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <button class="w-full bg-dorado text-negro font-bold py-2.5 rounded-lg text-sm uppercase" disabled={eleg.length === 0} onClick={() => setFase('veredicto')}>
-                        Evaluar cumplimiento
-                      </button>
-                    </div>
-                  )}
-
-                  {fase === 'veredicto' && (
-                    <div class="space-y-4">
-                      <h3 class="text-md text-center text-dorado">¿Cumplieron la orden de Su Majestad?</h3>
-                      <div class="space-y-2">
-                        {eleg.map(id => (
-                          <div key={id} class="bg-neutral-900 border border-neutral-800 p-3 rounded-lg flex justify-between items-center">
-                            <span class="text-sm">{jugs.find(j => j.id === id)?.nombre}</span>
-                            <div class="flex gap-2">
-                              <button class={`px-3 py-1 rounded text-xs font-bold ${vered[id] === true ? 'bg-green-600' : 'bg-neutral-800'}`} onClick={() => setVered(p => ({ ...p, [id]: true }))}>SÍ</button>
-                              <button class={`px-3 py-1 rounded text-xs font-bold ${vered[id] === false ? 'bg-red-600' : 'bg-neutral-800'}`} onClick={() => setVered(p => ({ ...p, [id]: false }))}>NO</button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <button class="w-full bg-dorado text-negro font-bold py-2.5 rounded-lg text-sm uppercase" onClick={procesarVeredicto}>
-                        Siguiente Ronda
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          }
-
-          if (pant === 'ganador') {
-            return (
-              <div class="min-h-screen bg-neutral-950/95 flex flex-col justify-center items-center p-6 text-center">
-                <h1 class="text-2xl font-black text-dorado">FIN DE LAS PRENDAS</h1>
-                <p class="text-sm text-neutral-400 mt-2">Mazo completado con éxito.</p>
-                <button class="mt-6 bg-neutral-900 border border-dorado text-dorado py-2 px-4 rounded text-sm" onClick={() => window.location.reload()}>
-                  REINICIAR COMPLETAMENTE
-                </button>
-              </div>
-            );
-          }
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function ocultarPantallas() {
+            ['pantalla-activacion', 'pantalla-menu', 'pantalla-config', 'pantalla-ronda', 'pantalla-final'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+        }
+
+        async function verificarLicencia() {
+            const user = document.getElementById('act-user').value.trim();
+            const codigo = document.getElementById('act-codigo').value.trim().toUpperCase();
+            const errorTxt = document.getElementById('act-error');
+            const btn = document.getElementById('btn-activar');
+
+            if (!user || !codigo) {
+                errorTxt.innerText = "Completá ambos campos.";
+                errorTxt.classList.remove('hidden');
+                return;
+            }
+
+            btn.innerText = "VERIFICANDO...";
+            btn.disabled = true;
+
+            try {
+                const r = await fetch(`${SB_URL}/rest/v1/licencias?codigo=eq.${codigo}&select=*`, {
+                    headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+                });
+                const data = await r.json();
+                if (data && data.length > 0 && data[0].activo) {
+                    localStorage.setItem('rm_activacion', JSON.stringify({ nombre: user, codigo: codigo }));
+                    estado.activado = true;
+                    ocultarPantallas();
+                    document.getElementById('pantalla-menu').classList.remove('hidden');
+                } else {
+                    errorTxt.innerText = "Código inválido o dado de baja.";
+                    errorTxt.classList.remove('hidden');
+                }
+            } catch (e) {
+                errorTxt.innerText = "Error de conexión con la base de datos.";
+                errorTxt.classList.remove('hidden');
+            }
+            btn.innerText = "ACTIVAR LICENCIA";
+            btn.disabled = false;
+        }
+
+        function irAConfiguracion() {
+            ocultarPantallas();
+            document.getElementById('pantalla-config').classList.remove('hidden');
+            actualizarInputsJugadores();
+        }
+
+        function actualizarInputsJugadores() {
+            const cant = parseInt(document.getElementById('cant-jugadores').value);
+            document.getElementById('val-cantidad').innerText = cant;
+            const container = document.getElementById('contenedor-nombres');
+            container.innerHTML = "";
+            for (let i = 0; i < cant; i++) {
+                container.innerHTML += `<input type="text" id="jname-${i}" class="bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-sm text-white outline-none focus:border-dorado" placeholder="Jugador ${i+1}">`;
+            }
+        }
+
+        function empezarPartida() {
+            const cant = parseInt(document.getElementById('cant-jugadores').value);
+            estado.jugadores = [];
+            for (let i = 0; i < cant; i++) {
+                const inputVal = document.getElementById(`jname-${i}`).value.trim();
+                estado.jugadores.push({
+                    id: i,
+                    nombre: inputVal || `Jugador ${i + 1}`
+                });
+            }
+            estado.rondaActual = 1;
+            ocultarPantallas();
+            document.getElementById('pantalla-ronda').classList.remove('hidden');
+            montarFaseElegirRey();
+        }
+
+        function montarFaseElegirRey() {
+            document.getElementById('info-ronda').innerText = `RONDA ${estado.rondaActual} / ${estado.totalRondas}`;
+            document.getElementById('subfase-elegir-rey').classList.remove('hidden');
+            document.getElementById('subfase-consigna').classList.add('hidden');
+            document.getElementById('subfase-veredicto').classList.add('hidden');
+
+            const listaReyes = document.getElementById('lista-reyes');
+            listaReyes.innerHTML = "";
+            estado.jugadores.forEach(j => {
+                listaReyes.innerHTML += `<button onclick="seleccionarRey(${j.id})" class="bg-neutral-900 border border-neutral-800 p-3 rounded-lg font-medium hover:border-dorado transition-colors">${j.nombre}</button>`;
+            });
+        }
+
+        function seleccionarRey(id) {
+            estado.reyId = id;
+            estado.elegidos = [];
+            estado.veredictos = {};
+            estado.prendaActual = PRENDAS[Math.floor(Math.random() * PRENDAS.length)];
+            
+            document.getElementById('subfase-elegir-rey').classList.add('hidden');
+            document.getElementById('subfase-consigna').classList.remove('hidden');
+            
+            const reyNombre = estado.jugadores.find(j => j.id === id).nombre;
+            document.getElementById('titulo-consigna').innerText = `Orden del Rey ${reyNombre}`;
+            document.getElementById('texto-consigna').innerText = `"${estado.prendaActual}"`;
+
+            const listaAfectados = document.getElementById('lista-afectados');
+            listaAfectados.innerHTML = "";
+            estado.jugadores.filter(j => j.id !== id).forEach(j => {
+                listaAfectados.innerHTML += `<button id="btn-afectado-${j.id}" onclick="alternarElegido(${j.id})" class="p-2 rounded border text-xs bg-neutral-900 border-neutral-800 text-neutral-300 transition-all">${j.nombre}</button>`;
+            });
+
+            actualizarBotonVeredicto();
+        }
+
+        function alternarElegido(id) {
+            const index = estado.elegidos.indexOf(id);
+            const btn = document.getElementById(`btn-afectado-${id}`);
+            if (index > -1) {
+                estado.elegidos.splice(index, 1);
+                btn.className = "p-2 rounded border text-xs bg-neutral-900 border-neutral-800 text-neutral-300 transition-all";
+            } else {
+                estado.elegidos.push(id);
+                btn.className = "p-2 rounded border text-xs bg-dorado border-dorado text-negro font-bold transition-all";
+            }
+            actualizarBotonVeredicto();
+        }
+
+        function actualizarBotonVeredicto() {
+            const btn = document.getElementById('btn-ir-veredicto');
+            if (estado.elegidos.length > 0) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50');
+            }
+        }
+
+        function irAVeredicto() {
+            document.getElementById('subfase-consigna').classList.add('hidden');
+            document.getElementById('subfase-veredicto').classList.remove('hidden');
+
+            const listaVer = document.getElementById('lista-veredictos');
+            listaVer.innerHTML = "";
+            estado.elegidos.forEach(id => {
+                const jNombre = estado.jugadores.find(j => j.id === id).nombre;
+                estado.veredictos[id] = true; // Por defecto Sí
+                listaVer.innerHTML += `
+                    <div class="bg-neutral-900 border border-neutral-800 p-3 rounded-lg flex justify-between items-center">
+                        <span class="text-sm font-medium">${jNombre}</span>
+                        <div class="flex gap-2">
+                            <button id="v-si-${id}" onclick="setVeredicto(${id}, true)" class="px-3 py-1 rounded text-xs font-bold bg-green-600 text-white">SÍ</button>
+                            <button id="v-no-${id}" onclick="setVeredicto(${id}, false)" class="px-3 py-1 rounded text-xs font-bold bg-neutral-800 text-neutral-400">NO</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function setVeredicto(id, cumplio) {
+            estado.veredictos[id] = cumplio;
+            const btnSi = document.getElementById(`v-si-${id}`);
+            const btnNo = document.getElementById(`v-no-${id}`);
+            if (cumplio) {
+                btnSi.className = "px-3 py-1 rounded text-xs font-bold bg-green-600 text-white";
+                btnNo.className = "px-3 py-1 rounded text-xs font-bold bg-neutral-800 text-neutral-400";
+            } else {
+                btnSi.className = "px-3 py-1 rounded text-xs font-bold bg-neutral-800 text-neutral-400";
+                btnNo.className = "px-3 py-1 rounded text-xs font-bold bg-red-600 text-white";
+            }
+        }
+
+        function guardarRonda() {
+            if (estado.rondaActual >= estado.totalRondas) {
+                ocultarPantallas();
+                document.getElementById('pantalla-final').classList.remove('hidden');
+            } else {
+                estado.rondaActual++;
+                montarFaseElegirRey();
+            }
+        }
     </script>
 </body>
 </html>
