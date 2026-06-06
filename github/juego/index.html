@@ -128,6 +128,18 @@ body{background:var(--negro);color:var(--blanco);font-family:'Cormorant Garamond
 .nav-bar{display:flex;gap:.4rem;justify-content:center;padding:.75rem 1rem;border-top:1px solid rgba(201,168,76,.13);background:rgba(5,5,5,.97);position:fixed;bottom:0;width:100%;backdrop-filter:blur(12px);z-index:9000}
 .nav-btn{background:transparent;border:1px solid rgba(201,168,76,.2);color:rgba(245,240,232,.5);padding:.55rem .6rem;font-size:.78rem;cursor:pointer;letter-spacing:1px;transition:all .2s;flex:1;max-width:110px;border-radius:3px}
 .nav-btn.on{background:rgba(201,168,76,.1);border-color:var(--oro);color:var(--oro-claro)}
+
+/* Carta virtual */
+.carta-wrap{perspective:800px;width:200px;height:300px;cursor:pointer;margin:0 auto}
+.carta-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.carta-inner.girada{transform:rotateY(180deg)}
+.carta-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem}
+.carta-dorso-v{background:linear-gradient(160deg,#0d0a04,#1a1306,#0d0a04);border:3px solid var(--oro-oscuro);box-shadow:0 8px 40px rgba(0,0,0,.6),inset 0 0 40px rgba(0,0,0,.4)}
+.carta-dorso-v::before{content:'♛';position:absolute;font-size:4rem;color:var(--oro-oscuro);opacity:.3}
+.carta-frente{background:linear-gradient(160deg,#0f0800,#1e1000,#0f0800);border:3px solid var(--oro);box-shadow:0 8px 40px rgba(201,168,76,.25);transform:rotateY(180deg)}
+.carta-frente-com{background:linear-gradient(160deg,#0a0520,#160b3a,#0a0520);border:3px solid var(--violeta-claro);transform:rotateY(180deg)}
+.carta-num-grande{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:var(--oro-claro);line-height:1}
+.carta-tipo-lbl{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:3px;color:var(--oro);text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -321,22 +333,87 @@ function App(){
   const [panNivel,setPanNivel]=useState('tibio');
   const [modalReglas,setModalReglas]=useState(false);
   const [nivelesJuego,setNivelesJuego]=useState(['tibio','caliente','llamas']);
+  // Reparto virtual
+  const [repartoVirtual,setRepartoVirtual]=useState(false);
+  const [mazo,setMazo]=useState([]);
+  const [mazoIdx,setMazoIdx]=useState(0);
+  const [cartaVis,setCartaVis]=useState(false);
+  const [asignaciones,setAsignaciones]=useState([]); // [{turno,tipo,num}]
 
   function showMsg(m){setMsg(m);setTimeout(()=>setMsg(''),2200)}
+
+  function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+
+  function generarMazo(js){
+    const cartas=[];
+    cartas.push({tipo:'rey'});
+    if(conCom) cartas.push({tipo:'comodin'});
+    let num=1;
+    while(cartas.length<js.length){
+      cartas.push({tipo:'numero',num:num++});
+    }
+    return shuffle(cartas);
+  }
 
   function iniciar(){
     const js=[];
     for(let i=0;i<numJug;i++){
-      // Parejas de a 2; si es impar el último jugador va solo (equipo propio)
       const equipo = i<numJug-1||numJug%2===0 ? Math.floor(i/2) : Math.floor(numJug/2);
       js.push({id:i,nombre:nombres[i].trim()||`Jugador ${i+1}`,equipo,solo:numJug%2!==0&&i===numJug-1});
     }
     setJugs(js);
     const sc={};js.forEach(j=>{sc[j.id]=0});
-    setScores(sc);setRonda(1);setCooldown(0);setPant('juego');resetRonda();
+    setScores(sc);setRonda(1);setCooldown(0);setPant('juego');
+    if(repartoVirtual){
+      const m=generarMazo(js);
+      setMazo(m);setMazoIdx(0);setCartaVis(false);setAsignaciones([]);
+      setFase('repartir-virtual');
+      setReyId(null);setComId(null);setComAntes(null);setConVis(false);setEleg([]);setTodosE(false);setVered({});setPrenda(null);
+    } else {
+      resetRonda();
+    }
   }
 
-  function resetRonda(){setFase('rey-quien');setReyId(null);setComId(null);setComAntes(null);setConVis(false);setEleg([]);setTodosE(false);setVered({});setPrenda(null)}
+  function resetRonda(){
+    if(repartoVirtual){
+      const m=generarMazo(jugs);
+      setMazo(m);setMazoIdx(0);setCartaVis(false);setAsignaciones([]);
+      setFase('repartir-virtual');
+    } else {
+      setFase('rey-quien');
+    }
+    setReyId(null);setComId(null);setComAntes(null);setConVis(false);setEleg([]);setTodosE(false);setVered({});setPrenda(null);
+  }
+
+  function tocarCarta(){
+    if(!cartaVis){
+      // Revelar carta
+      setCartaVis(true);
+    } else {
+      // Registrar asignación y pasar a la siguiente
+      const carta=mazo[mazoIdx];
+      const nuevaAsig=[...asignaciones,{turno:mazoIdx+1,tipo:carta.tipo,num:carta.num}];
+      setAsignaciones(nuevaAsig);
+      setCartaVis(false);
+      const sig=mazoIdx+1;
+      if(sig>=mazo.length){
+        // Reparto completo — detectar Rey y Comodín automáticamente
+        const reyIdx=mazo.findIndex(c=>c.tipo==='rey');
+        const comIdx=mazo.findIndex(c=>c.tipo==='comodin');
+        setReyId(reyIdx);
+        if(comIdx>=0) setComId(comIdx);
+        // Ir a pantalla de comodín si hay, sino directo a consigna
+        if(conCom){
+          setFase('comodin-anuncio');
+        } else {
+          elegirPrenda();
+          setFase('consigna');
+        }
+      } else {
+        setMazoIdx(sig);
+      }
+    }
+  }
 
   function getSorteo(){
     const nvlsDisp = nivelesJuego.filter(nv=>prendas[nv].length>0);
@@ -571,6 +648,15 @@ function App(){
       <div className="card">
         <div className="toggle-row">
           <div>
+            <span className="lbl" style={{margin:0}}>🃏 Reparto virtual de cartas</span>
+            <div className="toggle-desc">El celular reparte los naipes — sin cartas físicas</div>
+          </div>
+          <button className={`toggle${repartoVirtual?' on':''}`} onClick={()=>setRepartoVirtual(v=>!v)}/>
+        </div>
+      </div>
+      <div className="card">
+        <div className="toggle-row">
+          <div>
             <span className="lbl" style={{margin:0}}>Comodín</span>
             <div className="toggle-desc">Antes de la consigna suma puntos · Después no suma</div>
           </div>
@@ -630,6 +716,70 @@ function App(){
         <div className="ronda-info"><div className="ronda-lbl">Ronda</div><div className="ronda-n">{ronda}/{totR}</div></div>
         <button className="btn-sm" onClick={()=>setPanel('scores')}>📊 Pts</button>
       </div>
+
+      {/* FASE: REPARTO VIRTUAL */}
+      {fase==='repartir-virtual'&&(
+      <div className="fase">
+        <div style={{fontFamily:'Cinzel,serif',fontSize:'.65rem',letterSpacing:'3px',color:'var(--oro)',marginBottom:'.5rem'}}>
+          NAIPE {mazoIdx+1} DE {mazo.length}
+        </div>
+        <div className="fase-titulo">TOCÁ EL NAIPE</div>
+        <p style={{fontSize:'.9rem',color:'rgba(245,240,232,.5)',marginBottom:'2rem',lineHeight:1.6}}>
+          {!cartaVis?'Pasá el celular al siguiente jugador/a':'Mirá tu carta. No la muestres a nadie. Tocá de nuevo para continuar.'}
+        </p>
+        <div className="carta-wrap" onClick={tocarCarta}>
+          <div className={`carta-inner${cartaVis?' girada':''}`}>
+            <div className="carta-face carta-dorso-v"/>
+            {mazo[mazoIdx]&&(
+              <div className={`carta-face ${mazo[mazoIdx].tipo==='comodin'?'carta-frente-com':'carta-frente'}`}>
+                {mazo[mazoIdx].tipo==='rey'&&<>
+                  <div style={{fontSize:'3.5rem'}}>♛</div>
+                  <div className="carta-tipo-lbl">REY / REYNA</div>
+                  <div style={{fontSize:'.75rem',color:'rgba(201,168,76,.6)',marginTop:'.3rem',fontStyle:'italic'}}>Vos mandás esta ronda</div>
+                </>}
+                {mazo[mazoIdx].tipo==='comodin'&&<>
+                  <div style={{fontSize:'3.5rem'}}>🃏</div>
+                  <div className="carta-tipo-lbl" style={{color:'var(--violeta-claro)'}}>COMODÍN</div>
+                  <div style={{fontSize:'.75rem',color:'rgba(167,139,250,.6)',marginTop:'.3rem',fontStyle:'italic',padding:'0 1rem',textAlign:'center'}}>Anunciate antes de la consigna para sumar puntos</div>
+                </>}
+                {mazo[mazoIdx].tipo==='numero'&&<>
+                  <div className="carta-num-grande">{mazo[mazoIdx].num}</div>
+                  <div className="carta-tipo-lbl">TU NÚMERO</div>
+                </>}
+              </div>
+            )}
+          </div>
+        </div>
+        <div style={{marginTop:'1.5rem',fontSize:'.82rem',color:'rgba(245,240,232,.3)'}}>
+          {!cartaVis?'👆 Tocá la carta':'👆 Tocá de nuevo para pasar al siguiente'}
+        </div>
+      </div>
+      )}
+
+      {/* FASE: ANUNCIO COMODÍN post reparto virtual */}
+      {fase==='comodin-anuncio'&&(
+      <div className="fase">
+        <div className="fase-icon">🃏</div>
+        <div className="fase-titulo">MOMENTO DEL COMODÍN</div>
+        <div style={{background:'rgba(124,58,237,.08)',border:'1px solid rgba(124,58,237,.2)',borderRadius:4,padding:'1rem',marginBottom:'1.5rem',fontSize:'.95rem',color:'rgba(245,240,232,.8)',lineHeight:1.7}}>
+          ⚠️ <strong style={{color:'var(--violeta-claro)'}}>¿El Comodín quiere anunciarse ahora?</strong><br/>
+          Anunciarse antes de la consigna → <strong style={{color:'#86efac'}}>suma puntos si cumple</strong><br/>
+          Después de la consigna → <strong style={{color:'#fca5a5'}}>no suma puntos</strong>
+        </div>
+        <div style={{display:'flex',gap:'.75rem',marginBottom:'1rem'}}>
+          <button className={`pick-btn${comAntes===false?' on':''}`} style={{flex:1,borderLeftColor:'#555'}} onClick={()=>{setComAntes(false);setComId(null)}}>
+            Nadie se anuncia<br/><small style={{fontSize:'.72rem',color:'rgba(245,240,232,.35)'}}>Sin comodín esta ronda</small>
+          </button>
+          <button className={`pick-btn violeta${comAntes===true?' on':''}`} style={{flex:1}} onClick={()=>setComAntes(true)}>
+            ✓ Me anuncio ahora<br/><small style={{fontSize:'.72rem',color:'#86efac'}}>Suma puntos si cumple</small>
+          </button>
+        </div>
+        <button className="btn-gold" style={{width:'100%'}} disabled={comAntes===null}
+          onClick={()=>{elegirPrenda();setFase('consigna')}}>
+          VER CONSIGNA →
+        </button>
+      </div>
+      )}
 
       {/* ¿Quién sacó el Rey? */}
       {fase==='rey-quien'&&(
@@ -800,6 +950,30 @@ function App(){
         }} style={{width:'100%',marginTop:'.6rem',background:'transparent',border:'1px solid rgba(239,68,68,.3)',color:'#fca5a5',padding:'.75rem',fontFamily:'Cinzel,serif',fontSize:'.82rem',cursor:'pointer',borderRadius:3,letterSpacing:'1px'}}>
           ⛔ SUSPENDER PRENDA — Sin puntos, nueva ronda
         </button>
+
+        {/* Revelación de números de la ronda */}
+        {repartoVirtual && asignaciones.length>0 && (
+        <div style={{marginTop:'1.25rem',background:'rgba(255,255,255,.03)',border:'1px solid rgba(201,168,76,.2)',borderRadius:6,padding:'1rem'}}>
+          <div style={{fontFamily:'Cinzel,serif',fontSize:'.65rem',letterSpacing:'3px',color:'var(--oro)',marginBottom:'.75rem',textAlign:'center'}}>
+            📋 NAIPES DE ESTA RONDA
+          </div>
+          {asignaciones.map((a,i)=>(
+            <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'.4rem .5rem',borderBottom:'1px solid rgba(255,255,255,.05)',fontSize:'.88rem'}}>
+              <span style={{color:'rgba(245,240,232,.45)',fontFamily:'Cinzel,serif',fontSize:'.65rem'}}>Turno {a.turno}</span>
+              <span style={{
+                fontFamily:'Playfair Display,serif',
+                color: a.tipo==='rey'?'var(--oro-claro)':a.tipo==='comodin'?'var(--violeta-claro)':'var(--blanco)',
+                fontWeight: a.tipo==='rey'?700:400
+              }}>
+                {a.tipo==='rey'?'♛ REY / REYNA':a.tipo==='comodin'?'🃏 COMODÍN':`Número ${a.num}`}
+              </span>
+            </div>
+          ))}
+          <div style={{fontSize:'.72rem',color:'rgba(245,240,232,.25)',textAlign:'center',marginTop:'.6rem',fontStyle:'italic'}}>
+            Esta información se borra al comenzar la siguiente ronda
+          </div>
+        </div>
+        )}
       </div>
       )}
     </div>
