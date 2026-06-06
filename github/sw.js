@@ -1,4 +1,4 @@
-const CACHE_NAME = 'el-rey-manda-v16';
+const CACHE_NAME = 'el-rey-manda-v20';
 const ASSETS = [
   '/',
   '/index.html',
